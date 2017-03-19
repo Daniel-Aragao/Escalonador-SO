@@ -1,3 +1,46 @@
-<p>
-  menu works!
-</p>
+<div class="panel panel-default">
+  <div class="panel-heading">Menu</div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="sel1">Algoritmo de escalonamento</label>
+          <select class="form-control" id="sel1">
+            <option>Round Robin Priority</option>
+            <option>Least Time To Go</option>
+            <option>3</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <label for="sel1">Processos inicias</label>
+        <input type="number" class="form-control" min=0>
+      </div>
+      <div class="col-md-2">
+        <label for="sel1">Cores (1 a 64)</label>
+        <input type="number" class="form-control" min=1 max=64>
+      </div>
+      <div class="col-md-2">
+        <label for="sel1">Quantum (2 a 20)</label>
+        <input type="number" class="form-control" min=2 max=20>
+      </div>
+      <div class="col-md-2">
+        <label class="col-md-12">&emsp;</label>
+        <button class="btn btn-success col-md-12">Iniciar</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        <label class="col-md-12">&emsp;</label>
+        <button class="btn btn-success">Adicionar processo</button>
+      </div>
+      <div class="col-md-10">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            Basic panel example
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
