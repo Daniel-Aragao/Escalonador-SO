@@ -40,7 +40,7 @@ export class AddProccessComponent implements OnInit {
 
   public onClickEnviarProcessos() {
     if (this.newProcess.length == 1) {
-      this.processSender.SendProcess(this.newProcess[0].processo, "blue");
+      this.processSender.SendProcess(this.newProcess[0].processo, "green");
     } else if (this.newProcess.length > 1) {
       var processos: Processo[] = [];
 
