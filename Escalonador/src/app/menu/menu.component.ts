@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Processo } from "../model/Processo";
-import { MenuViewModel } from "../model/MenuViewModel";
+import { Processo } from "../models/Processo";
+import { MenuViewModel } from "../models/MenuViewModel";
+import { ProcessFactoryService } from '../services/process-factory.service';
 
 @Component({
   selector: 'esc-menu',
@@ -9,11 +10,9 @@ import { MenuViewModel } from "../model/MenuViewModel";
 })
 
 export class MenuComponent implements OnInit {
-  ProcessFactory: ProcessFactory;
   MenuViewModel: MenuViewModel;
 
-  constructor() {
-    this.ProcessFactory = new ProcessFactory();
+  constructor(private processFactory: ProcessFactoryService) {
     this.MenuViewModel = new MenuViewModel();
   }
 
@@ -21,23 +20,11 @@ export class MenuComponent implements OnInit {
   }
 
   public onClickAdicionarProcesso(): void {
-    const newProcess = this.ProcessFactory.GenerateProcess();
+    const newProcess = this.processFactory.GenerateProcess();
   }
 
   public onClickStart(): void {
-    const newProcess = this.ProcessFactory.GenerateAnyProcess(this.MenuViewModel.QuantidadeProcessosIniciais);
+    const newProcess = this.processFactory.GenerateAnyProcess(this.MenuViewModel.QuantidadeProcessosIniciais);
   }
 
-}
-
-class ProcessFactory {
-
-  public GenerateProcess(): Processo {
-    return new Processo();
-  }
-
-  public GenerateAnyProcess(count: number): Processo[] {
-
-    return new Processo[count];
-  }
 }

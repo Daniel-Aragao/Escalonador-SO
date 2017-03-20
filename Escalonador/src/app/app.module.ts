@@ -10,6 +10,8 @@ import { CoreComponent } from './processador/core/core.component';
 import { RoundRobinPriorityComponent } from './Algoritmos/round-robin-priority/round-robin-priority.component';
 import { LeastTimeToGoComponent } from './Algoritmos/least-time-to-go/least-time-to-go.component';
 
+import { ProcessFactoryService } from './services/process-factory.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,7 +26,7 @@ import { LeastTimeToGoComponent } from './Algoritmos/least-time-to-go/least-time
     FormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [ProcessFactoryService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
