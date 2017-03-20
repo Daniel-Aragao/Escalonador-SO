@@ -5,16 +5,23 @@ import { EProcessState } from '../models/EProcessState';
 @Injectable()
 export class ProcessFactoryService {
   private contagem: number;
-  constructor() { }
+
+  constructor() {
+    this.resetPID();
+  }
+  
+  public resetPID() {
+    this.contagem = 0;
+  }
 
    public GenerateProcess(): Processo {
     return this.Generate();
   }
 
   public GenerateAnyProcess(count: number): Processo[] {
-    var processos = new Processo[count]
+    var processos: Processo[] = [];
     for (var i = 0; i < count; i++){
-      processos[i] = this.Generate();
+      processos.push(this.Generate());
     }
     return processos;
   }
@@ -25,11 +32,11 @@ export class ProcessFactoryService {
 
     processo.TDuracao = this.RandomNumber(4, 20);
     processo.TRestante = processo.TDuracao;
-
-    processo.EState = EProcessState.esperando;
+    processo.TDeadline = this.RandomNumber(4, 20);
 
     processo.Prioridade = this.RandomNumber(0, 3);
-    processo.TDeadline = this.RandomNumber(4, 20);
+
+    processo.EState = EProcessState.esperando;
 
     this.contagem++;
 

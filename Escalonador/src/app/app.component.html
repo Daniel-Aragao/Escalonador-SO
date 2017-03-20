@@ -1,8 +1,8 @@
 <div class="">
   <div class="col-md-12">
-    <esc-menu></esc-menu>
+    <esc-menu (AlgorismoSelecionado)="algoritmo = $event" (AdicionarProcesso)="ProcessoAdicionado($event)"></esc-menu>
   </div>
-  <div class="col-md-12">
+  <div class="">
     <div class="col-md-5">
       <esc-processador></esc-processador>
     </div>

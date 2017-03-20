@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Processo } from "../models/Processo";
 import { MenuViewModel } from "../models/MenuViewModel";
 import { ProcessFactoryService } from '../services/process-factory.service';
@@ -10,7 +10,13 @@ import { ProcessFactoryService } from '../services/process-factory.service';
 })
 
 export class MenuComponent implements OnInit {
-  MenuViewModel: MenuViewModel;
+  private MenuViewModel: MenuViewModel;
+  private running: boolean;
+  private newProcess: Processo;
+  private newProcessInfo: any[];
+
+  @Output() AlgorismoSelecionado = new EventEmitter();
+  @Output() AdicionarProcesso = new EventEmitter();
 
   constructor(private processFactory: ProcessFactoryService) {
     this.MenuViewModel = new MenuViewModel();
@@ -19,12 +25,37 @@ export class MenuComponent implements OnInit {
   ngOnInit() {
   }
 
+  public onChangeAlgoritmo(valor : number) {
+    this.AlgorismoSelecionado.emit(valor);
+  }
+
   public onClickAdicionarProcesso(): void {
-    const newProcess = this.processFactory.GenerateProcess();
+    //const newProcess = this.processFactory.GenerateProcess();
+    this.newProcess = this.processFactory.GenerateProcess();
+    this.newProcessInfo = [];
+
+    for (var p in this.newProcess) {
+      this.newProcessInfo.push(
+        {
+          name: p,
+          value: this.newProcess[p]
+        });
+    }
+
+
+    this.AdicionarProcesso.emit(this.newProcess);
   }
 
   public onClickStart(): void {
-    const newProcess = this.processFactory.GenerateAnyProcess(this.MenuViewModel.QuantidadeProcessosIniciais);
+    this.processFactory.resetPID();
+    this.running = true;
+    var newProcess = this.processFactory.GenerateAnyProcess(this.MenuViewModel.QuantidadeProcessosIniciais);
+  }
+
+  public onClickStop() {
+    this.running = false;
+    this.newProcess = null;
+    this.newProcessInfo = null;
   }
 
 }

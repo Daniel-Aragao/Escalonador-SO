@@ -1,6 +1,5 @@
 export class MenuViewModel {
 
-    public Algoritmo: string;
     public QuantidadeProcessosIniciais: number;
     public QuantidadeCores: number;
     public Quantum: number;
