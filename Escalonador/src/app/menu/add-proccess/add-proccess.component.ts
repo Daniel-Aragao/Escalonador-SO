@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProcessFactoryService } from '../../services/process-factory.service';
 import { ProcessSenderService } from '../../services/process-sender.service';
 import { Processo } from "../../models/Processo";
@@ -9,33 +9,51 @@ import { Processo } from "../../models/Processo";
   templateUrl: './add-proccess.component.html',
   styleUrls: ['./add-proccess.component.css']
 })
-export class AddProccessComponent implements OnInit, OnDestroy {
-  
-  newProcess: Processo;
-  newProcessInfo: any[];
+export class AddProccessComponent implements OnInit {
+  newProcess: NewProcessViewModel[];
 
-  constructor(private processFactory: ProcessFactoryService, private processSender: ProcessSenderService) { }
+  constructor(private processFactory: ProcessFactoryService, private processSender: ProcessSenderService) { 
+    this.newProcess = [];
+  }
 
   ngOnInit() {
   }
 
   public onClickAdicionarProcesso(): void {
-    this.newProcess = this.processFactory.GenerateProcess();
-    this.newProcessInfo = [];
+    var newProcess = this.processFactory.GenerateProcess();
+    var newProcessInfo = [];
 
-    for (var p in this.newProcess) {
-      this.newProcessInfo.push(
+    for (var p in newProcess) {
+      newProcessInfo.push(
         {
           name: p,
-          value: this.newProcess[p]
+          value: newProcess[p]
         });
     }
+    var np = new NewProcessViewModel()
+    np.processo = newProcess;
+    np.processoInfo = newProcessInfo;
 
-    this.processSender.SendProcess(this.newProcess);
+    this.newProcess.push(np);
+    //this.processSender.SendProcess(newProcess.processo);
   }
 
-  ngOnDestroy() {
-    alert('destroyied');
+  public onClickEnviarProcessos() {
+    if (this.newProcess.length == 1) {
+      this.processSender.SendProcess(this.newProcess[0].processo, "blue");
+    } else if (this.newProcess.length > 1) {
+      var processos: Processo[] = [];
+
+      this.newProcess.forEach((v, i, a) => processos.push(v.processo));
+
+      this.processSender.SendManyProcess(processos, "blue");      
+    }
+    this.newProcess = [];
   }
 
+}
+
+class NewProcessViewModel{
+  public processo: Processo;
+  public processoInfo: any[];
 }

@@ -31,7 +31,7 @@ export class MenuComponent implements OnInit {
     this.processFactory.resetPID();
     this.running = true;
     var newProcess = this.processFactory.GenerateAnyProcess(this.MenuViewModel.QuantidadeProcessosIniciais);
-    this.processSender.SendManyProcess(newProcess);
+    this.processSender.SendManyProcess(newProcess, "red");
   }
 
   public onClickStop() {

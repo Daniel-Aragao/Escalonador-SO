@@ -9,9 +9,4 @@ import { Processo } from './models/Processo';
 export class AppComponent {
   private algoritmo: number = 1;
   private processo: Processo;
-
-  public ProcessoAdicionado(p : Processo) {
-    this.processo = p;
-    console.log(p);
-  }
 }

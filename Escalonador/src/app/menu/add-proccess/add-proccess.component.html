@@ -1,14 +1,23 @@
 <div class="col-md-2">
-  <label class="col-md-12">&emsp;</label>
-  <button class="btn btn-success" (click)="onClickAdicionarProcesso()">Adicionar processo</button>
+  <div class="">
+    <label class="col-md-12">&emsp;</label>
+    <button class="btn btn-success col-md-12" (click)="onClickAdicionarProcesso()">Adicionar processo</button>
+  </div>
+  <div class="">
+    <label class="col-md-12">&emsp;</label>
+    <button class="btn btn-success col-md-12" (click)="onClickEnviarProcessos()">Enviar processos</button>
+  </div>
 </div>
-<div class="col-md-10">
+<div *ngIf="newProcess.length" class="col-md-10">
   <div class="panel panel-default">
     <div class="panel-body">
-      <span *ngFor="let p of newProcessInfo;let i = index; let isOdd = odd; let isEven = even" class="label" [class.label-primary]="isOdd"
-        [class.label-info]="isEven">
-              {{p.name}}: {{p.value}}
-            </span> &emsp;
+      <div *ngFor="let np of newProcess">
+        <span *ngFor="let info of np.processoInfo;let i = index; let isOdd = odd; let isEven = even" class="col-lg-1 label" [class.label-primary]="isOdd"
+          [class.label-info]="isEven">
+                {{info.name}}: {{info.value}}
+        </span>
+        <br/>
+      </div>
     </div>
   </div>
 </div>
