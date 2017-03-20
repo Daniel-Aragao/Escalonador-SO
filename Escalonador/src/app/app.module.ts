@@ -13,6 +13,8 @@ import { AddProccessComponent } from './menu/add-proccess/add-proccess.component
 
 import { ProcessFactoryService } from './services/process-factory.service';
 import { ProcessSenderService } from './services/process-sender.service';
+import { ProcessoQueueComponent } from './Algoritmos/processo-queue/processo-queue.component';
+import { ProcessoQueueItemComponent } from './Algoritmos/processo-queue-item/processo-queue-item.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { ProcessSenderService } from './services/process-sender.service';
     CoreComponent,
     RoundRobinPriorityComponent,
     LeastTimeToGoComponent,
-    AddProccessComponent
+    AddProccessComponent,
+    ProcessoQueueComponent,
+    ProcessoQueueItemComponent
   ],
   imports: [
     BrowserModule,
