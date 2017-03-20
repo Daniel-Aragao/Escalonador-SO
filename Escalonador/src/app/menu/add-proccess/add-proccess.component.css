@@ -1,0 +1,7 @@
+.label{
+    margin-left: 5px;
+}
+
+.label:first-child{
+    margin: 0;
+}

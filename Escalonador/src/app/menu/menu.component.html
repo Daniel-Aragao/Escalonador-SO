@@ -32,21 +32,7 @@
       </div>
     </div>
     <div *ngIf="running" class="row">
-      <div class="col-md-2">
-        <label class="col-md-12">&emsp;</label>
-        <button class="btn btn-success" (click)="onClickAdicionarProcesso()" [disabled]="!running">Adicionar processo</button>
-      </div>
-      <div class="col-md-10">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <span *ngFor="let p of newProcessInfo;let i = index; let isOdd = odd; let isEven = even" 
-              class="label" [class.label-primary]="isOdd" [class.label-info]="isEven">
-              {{p.name}}: {{p.value}}
-            </span>
-            &emsp;
-          </div>
-        </div>
-      </div>
+      <esc-add-proccess></esc-add-proccess>
     </div>
   </div>
 </div>
