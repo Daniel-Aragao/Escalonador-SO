@@ -1,0 +1,21 @@
+.processo-queue-item {
+    display: inline-block;
+    width: 100px;
+    height: 94%;
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 5px;
+    word-break: break-all;
+    font-size: 10px;
+    margin: 2px;
+    text-align: center;
+}
+.item-pid{
+    float: left;
+}
+.item-duracao{
+    float: right;
+}
+.item-restante{
+    font-size: 30px;
+}

@@ -1,7 +1,9 @@
 .processo-queue {
-    height: 80px;
+    height: 110px;
     width: auto;
     margin: 5px;
     padding: 5px;
-    border: 1px solid black;
+    border: 2px solid black;
+    border-radius: 5px;
+    overflow-y: scroll;    
 }

@@ -1,0 +1,14 @@
+<div class="processo-queue-item">
+  <div>
+    <span class="item-pid">PID: {{processo.PID}}</span>
+    <span class="item-duracao">Dur.:{{processo.TDuracao}}</span>
+  </div>
+  <div class="clearfix"></div>
+  <div>
+    <span class="item-restante">{{processo.TRestante}}s</span>
+  </div>
+  <div *ngIf="showDeadline">
+    <span class="item-deadline">Deadline.:{{processo.TDeadline}}</span>
+  </div>
+
+</div>

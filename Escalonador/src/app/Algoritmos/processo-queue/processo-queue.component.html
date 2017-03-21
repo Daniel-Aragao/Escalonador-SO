@@ -1,4 +1,3 @@
 <div class="processo-queue">
-  {{processos | json}}
-  <esc-processo-queue-item *ngFor="let processo of processos" [processo]="processo"></esc-processo-queue-item>
+  <esc-processo-queue-item *ngFor="let processo of processos" [showDeadline]="showDeadline" [processo]="processo"></esc-processo-queue-item>
 </div>

@@ -8,15 +8,14 @@ import { Processo } from '../../models/Processo';
 })
 
 export class ProcessoQueueComponent implements OnInit {
-  @Input()
-  processos: Processo[];
+  @Input() processos: Processo[];
+  @Input() showDeadline: boolean;
 
   constructor() { 
     
   }
 
   ngOnInit() {
-    this.processos = [];
   }
 
 }

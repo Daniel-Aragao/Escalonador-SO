@@ -35,11 +35,11 @@ export class ProcessFactoryService {
     var processo = new Processo();
     processo.PID = this.contagem;
 
-    processo.TDuracao = this.RandomNumber(4, 20);
+    processo.TDuracao = this.RandomNumber(4, 21);
     processo.TRestante = processo.TDuracao;
-    processo.TDeadline = this.RandomNumber(4, 20);
+    processo.TDeadline = this.RandomNumber(4, 21);
 
-    processo.Prioridade = this.RandomNumber(0, 3);
+    processo.Prioridade = this.RandomNumber(0, 4);
 
     processo.EState = EProcessState.esperando;
 
