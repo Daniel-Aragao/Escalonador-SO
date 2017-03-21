@@ -1,3 +1,8 @@
-<p>
-  least-time-to-go works!
-</p>
+<div class="panel panel-info">
+  <div class="panel-heading">Least Time To Go</div>
+  <div class="panel-body">
+
+    <esc-processo-queue *ngFor="let processoQueue of processoQueues" [showDeadline]=true [processos]="processoQueue.Processos"></esc-processo-queue>
+
+  </div>
+</div>

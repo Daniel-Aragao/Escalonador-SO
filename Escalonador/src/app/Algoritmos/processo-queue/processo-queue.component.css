@@ -3,7 +3,10 @@
     width: auto;
     margin: 5px;
     padding: 5px;
-    border: 2px solid black;
+    border: 2px solid #ddd;
     border-radius: 5px;
     overflow-y: scroll;    
+}
+.processo-queue:hover{
+    background-color: #f5f5f5;
 }

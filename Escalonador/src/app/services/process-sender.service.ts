@@ -4,19 +4,19 @@ import { ProcessoViewModel } from "../models/ProcessoViewModel";
 
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 
+import { Observable } from 'rxjs/Observable';
+
 @Injectable()
 export class ProcessSenderService {
-  private addProcessSource = new ReplaySubject<ProcessoViewModel>();
-  public addProccess = this.addProcessSource.asObservable();
-
-  constructor() { }
+  private addProcessSource = new ReplaySubject<ProcessoViewModel>(1);
+  public addProccess: Observable<ProcessoViewModel> = this.addProcessSource.asObservable();
 
   public SendManyProcess(ps: Processo[], color: string) {
     var pvm = new ProcessoViewModel();
     pvm.GrupoProcessos = ps;
     pvm.isGroup = true;
     pvm.color = color;
-
+    
     this.addProcessSource.next(pvm);  
   }
 
@@ -25,7 +25,6 @@ export class ProcessSenderService {
     pvm.Processo = p;
     pvm.isGroup = false;
     pvm.color = color;
-
     this.addProcessSource.next(pvm);  
   }
 

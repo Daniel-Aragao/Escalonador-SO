@@ -15,6 +15,7 @@ export class MenuComponent implements OnInit {
   private running: boolean;
 
   @Output() AlgoritmoSelecionado = new EventEmitter();
+  @Output() RunningChanged = new EventEmitter();
 
   constructor(private processFactory: ProcessFactoryService, private processSender: ProcessSenderService) {
     this.MenuViewModel = new MenuViewModel();
@@ -30,12 +31,15 @@ export class MenuComponent implements OnInit {
   public onClickStart(): void {
     this.processFactory.resetPID();
     this.running = true;
+    this.RunningChanged.emit(this.running);
+
     var newProcess = this.processFactory.GenerateAnyProcess(this.MenuViewModel.QuantidadeProcessosIniciais);
     this.processSender.SendManyProcess(newProcess, "red");
   }
 
   public onClickStop() {
     this.running = false;
+    this.RunningChanged.emit(this.running);
   }
 
 }

@@ -2,20 +2,42 @@
     display: inline-block;
     width: 100px;
     height: 94%;
-    border: 1px solid black;
+    /*border: 1px solid #fdfdfd;*/
     padding: 5px;
     border-radius: 5px;
     word-break: break-all;
     font-size: 10px;
     margin: 2px;
     text-align: center;
+    box-shadow: 1px 1px 3px #000;
 }
+.processo-queue-item:hover{
+    box-shadow: 0px 0px 7px #000;
+}
+
 .item-pid{
     float: left;
 }
 .item-duracao{
     float: right;
 }
-.item-restante{
+
+.item-center{
     font-size: 30px;
+    line-height: 150%;
+}
+
+.item-red{
+    background-color: #961111;
+    color: white;
+}
+
+.item-blue{
+    background-color: #113b96;
+    color: white;
+}
+
+.item-green{
+    background-color: #11964b;
+    color: white;
 }

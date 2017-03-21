@@ -1,7 +1,6 @@
-<div class="panel panel-default">
+<div class="panel panel-info">
   <div class="panel-heading">Round Robin with Priority</div>
   <div class="panel-body">
-    {{processo?.PID}}
 
     <esc-processo-queue *ngFor="let processoQueue of processoQueues" [showDeadline]=false [processos]="processoQueue.Processos"></esc-processo-queue>
 

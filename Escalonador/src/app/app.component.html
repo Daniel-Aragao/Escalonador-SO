@@ -1,8 +1,8 @@
 <div class="">
   <div class="col-md-12">
-    <esc-menu (AlgoritmoSelecionado)="algoritmo = $event" ></esc-menu>
+    <esc-menu (AlgoritmoSelecionado)="algoritmo = $event" (RunningChanged)="running = $event" ></esc-menu>
   </div>
-  <div class="">
+  <div *ngIf="running">
     <div class="col-md-5">
       <esc-processador></esc-processador>
     </div>

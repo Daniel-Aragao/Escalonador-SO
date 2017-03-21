@@ -12,7 +12,6 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./round-robin-priority.component.css']
 })
 export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
-  private processo: Processo;
   private processoQueues: ProcessoQueue[];
   private subscription: Subscription;
 
@@ -31,14 +30,20 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
 
   private addToLine(p: ProcessoViewModel) {
     if (!p.isGroup) {
-      this.addProcessToQueue(p.Processo);
+      this.addProcessToQueue(null, null, p);
     } else {
-      p.GrupoProcessos.forEach((v: Processo, i: number, a: Processo[])=> this.addProcessToQueue(v))
+      p.GrupoProcessos.forEach((v: Processo, i: number, a: Processo[])=> this.addProcessToQueue(v, p.color))
     }
   }
 
-  private addProcessToQueue(p: Processo){
-    this.processoQueues[p.Prioridade].Processos.push(p);
+  private addProcessToQueue(p: Processo = null, color: string = null, pvm: ProcessoViewModel = null) {
+    if (pvm == null) {    
+      pvm = new ProcessoViewModel();
+      pvm.Processo = p;
+      pvm.color = color;
+    }
+    console.log(pvm);
+    this.processoQueues[pvm.Processo.Prioridade].Processos.push(pvm);      
   }
 
   ngOnDestroy() {
@@ -48,6 +53,6 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
 }
 
 class ProcessoQueue {
-  public Processos: Processo[] = [];
+  public Processos: ProcessoViewModel[] = [];
 
 }

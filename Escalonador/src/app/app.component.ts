@@ -9,4 +9,12 @@ import { Processo } from './models/Processo';
 export class AppComponent {
   private algoritmo: number = 1;
   private processo: Processo;
+  private running: Boolean;
+
+  private RunningChanged(r: Boolean) {
+    this.running = r;
+    if (r) {
+      
+    }
+  }
 }

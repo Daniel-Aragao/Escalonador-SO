@@ -1,14 +1,17 @@
-<div class="processo-queue-item">
+<div class="processo-queue-item item-{{processo.color}}">
   <div>
-    <span class="item-pid">PID: {{processo.PID}}</span>
-    <span class="item-duracao">Dur.:{{processo.TDuracao}}</span>
+    <span class="item-pid">PID: {{processo.Processo.PID}}</span>
+    <span class="item-duracao">Dur.:{{processo.Processo.TDuracao}}</span>
   </div>
   <div class="clearfix"></div>
-  <div>
-    <span class="item-restante">{{processo.TRestante}}s</span>
-  </div>
   <div *ngIf="showDeadline">
-    <span class="item-deadline">Deadline.:{{processo.TDeadline}}</span>
+    <span class="item-deadline item-center">{{processo.Processo.TDeadline}}s</span>
+  </div>
+  <div *ngIf="!showDeadline">
+    <span class="item-priority item-center">{{processo.Processo.Prioridade}}</span>
+  </div>
+  <div>
+    <span class="item-restante">Restante: {{processo.Processo.TRestante}}s</span>
   </div>
 
 </div>

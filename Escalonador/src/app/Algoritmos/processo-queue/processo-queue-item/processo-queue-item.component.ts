@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Processo } from '../../../models/Processo';
+import { ProcessoViewModel } from '../../../models/ProcessoViewModel';
 
 @Component({
   selector: 'esc-processo-queue-item',
@@ -8,13 +9,12 @@ import { Processo } from '../../../models/Processo';
 })
 export class ProcessoQueueItemComponent implements OnInit {
 
-  @Input() processo: Processo;
+  @Input() processo: ProcessoViewModel;
   @Input() showDeadline: boolean;
   
   constructor() { }
 
   ngOnInit() {
-    console.log(this.processo);
   }
 
 }
