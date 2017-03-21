@@ -25,18 +25,20 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.ProcessSenderService.addProccess.subscribe((p: ProcessoViewModel) => this.addToLine(p));
+    this.subscription = this.ProcessSenderService.addProccess.subscribe(
+      (p: ProcessoViewModel) => this.addToLine(p));
   }
 
   private addToLine(p: ProcessoViewModel) {
     if (!p.isGroup) {
-      //this.processo = p.Processo;
-      console.log(p.Processo)
-      this.processoQueues[0].Processos.push(p.Processo);
-      console.log(this.processoQueues[0]);
+      this.addProcessToQueue(p.Processo);
     } else {
-
+      p.GrupoProcessos.forEach((v: Processo, i: number, a: Processo[])=> this.addProcessToQueue(v))
     }
+  }
+
+  private addProcessToQueue(p: Processo){
+    this.processoQueues[p.Prioridade].Processos.push(p);
   }
 
   ngOnDestroy() {
