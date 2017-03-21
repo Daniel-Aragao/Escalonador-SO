@@ -3,7 +3,6 @@ import { ProcessSenderService } from '../../services/process-sender.service';
 import { Processo } from '../../models/Processo';
 import { ProcessoViewModel } from '../../models/ProcessoViewModel';
 
-
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -42,7 +41,7 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
       pvm.Processo = p;
       pvm.color = color;
     }
-    console.log(pvm);
+    
     this.processoQueues[pvm.Processo.Prioridade].Processos.push(pvm);      
   }
 
