@@ -1,3 +1,17 @@
-<p>
-  core works!
-</p>
+<div class="processo-queue-item item-red">
+  <div>
+    <span class="item-pid">PID: {{core.PID}}</span>
+    <span class="item-duracao">Dur.: {{core.TDuracao}}s</span>
+  </div>
+  <div class="clearfix"></div>
+  <div *ngIf="showDeadline">
+    <span class="item-deadline item-center">{{core.TDeadline}}s</span>
+  </div>
+  <div *ngIf="!showDeadline">
+    <span class="item-priority item-center">{{core.Prioridade}}</span>
+  </div>
+  <div>
+    <span class="item-restante">Restante: {{core.TRestante}}s</span>
+  </div>
+
+</div>
