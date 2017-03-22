@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProcessSenderService } from '../../services/process-sender.service';
+import { CoreSenderService } from '../../services/core-sender.service';
 import { Processo } from '../../models/Processo';
 import { ProcessoViewModel } from '../../models/ProcessoViewModel';
 import { ProcessoQueue } from "../../models/ProcessoQueue";
@@ -13,10 +14,11 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
   private processoQueues: ProcessoQueue[];
-  private subscription: Subscription;
+  private processSenderSubscription: Subscription;
+  private coreSenderSubscription: Subscription;
   private cursorQueue: number = 0;
 
-  constructor(private ProcessSenderService: ProcessSenderService) {
+  constructor(private ProcessSenderService: ProcessSenderService, private CoreSenderService: CoreSenderService) {
     this.processoQueues = [];
     this.processoQueues[0] = new ProcessoQueue();
     this.processoQueues[1] = new ProcessoQueue();
@@ -28,8 +30,12 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.ProcessSenderService.addProccess.subscribe(
+    this.processSenderSubscription = this.ProcessSenderService.addProccess.subscribe(
       (p: ProcessoViewModel) => this.addToLine(p));
+
+    this.coreSenderSubscription = this.CoreSenderService.sinalToLivre.subscribe(this.EnviarProCore);
+    
+
   }
 
   private addToLine(p: ProcessoViewModel) {
@@ -56,20 +62,26 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
 
     if (this.ExistsProcess() && this.ExistsCoreLivre()) {
 
+      /*
       if (this.cursorQueue === this.processoQueues.length)
         this.cursorQueue = 0;
+        */
+      let processo: Processo = this.GetProcessoWithLessPriority();
+      console.log(processo);
 
-      console.log(this.cursorQueue);
-
-      queue = this.processoQueues[this.cursorQueue];
-      processosVM = queue.Processos;
-
-      if (queue != undefined && processosVM[0] != undefined) {
-        this.ProcessSenderService.SendProcess(processosVM[0].Processo, "red");
-        queue.Processos.splice(0, 2);
-      }
-
-      this.cursorQueue++;
+      /*
+      
+            console.log(this.cursorQueue);
+      
+            queue = this.processoQueues[this.cursorQueue];
+            processosVM = queue.Processos;
+      
+            if (queue != undefined && processosVM[0] != undefined) {
+              this.ProcessSenderService.SendProcess(processosVM[0].Processo, "red");
+              queue.Processos.splice(0, 2);
+            }
+      */
+      //this.cursorQueue++;
     }
 
     setTimeout(() => {
@@ -87,7 +99,7 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
       }
 
     });
-    
+
     return exists;
   }
 
@@ -95,8 +107,40 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  private GetProcessoWithLessPriority(): Processo {
+    if (this.cursorQueue === this.processoQueues.length)
+      this.cursorQueue = 0;
+
+    let processo: Processo = null;
+    let queue: ProcessoQueue = undefined;
+    let processosVM: ProcessoViewModel[] = undefined;
+
+    while (processo == null) {
+      queue = this.processoQueues[this.cursorQueue];
+      //console.log(queue);
+      if (queue != undefined) {
+        processosVM = queue.Processos;
+        if (processosVM != undefined && processosVM[0] != undefined) {
+          processo = processosVM[0].Processo;
+          //processosVM.splice(0, 2);
+        }
+      }
+      this.cursorQueue++;
+    }
+
+    //this.cursorQueue++;
+    return processo;
+  }
+
+  private EnviarProCore(isFree: boolean): void {
+    if (!isFree)
+      return;
+
+    
+  }
+
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.processSenderSubscription.unsubscribe();
   }
 
 }

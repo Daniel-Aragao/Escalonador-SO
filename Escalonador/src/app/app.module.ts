@@ -13,6 +13,7 @@ import { AddProccessComponent } from './menu/add-proccess/add-proccess.component
 
 import { ProcessFactoryService } from './services/process-factory.service';
 import { ProcessSenderService } from './services/process-sender.service';
+import { ProcessSenderToCoreService } from './services/process-sender-core.service';
 import { CoreSenderService } from './services/core-sender.service';
 import { ProcessoQueueComponent } from './Algoritmos/processo-queue/processo-queue.component';
 import { ProcessoQueueItemComponent } from './Algoritmos/processo-queue/processo-queue-item/processo-queue-item.component';
