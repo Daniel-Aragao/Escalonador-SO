@@ -27,7 +27,7 @@ export class ProcessadorComponent implements OnInit {
       (p: ProcessoViewModel) => this.addToLine(p));
 
 
-    this.Loop(this);
+    //this.Loop(this);
 
   }
 
