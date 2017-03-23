@@ -35,7 +35,7 @@ import { ProcessoQueueItemComponent } from './Algoritmos/processo-queue/processo
     FormsModule,
     HttpModule
   ],
-  providers: [ProcessFactoryService, ProcessSenderService, CoreSenderService],
+  providers: [ProcessFactoryService, ProcessSenderService, CoreSenderService, ProcessSenderToCoreService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
