@@ -12,9 +12,6 @@ export class AppComponent {
   private running: Boolean;
 
   private RunningChanged(r: Boolean) {
-    this.running = r;
-    if (r) {
-      
-    }
+    this.running = r;    
   }
 }

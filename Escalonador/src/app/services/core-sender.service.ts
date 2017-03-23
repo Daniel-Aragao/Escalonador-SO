@@ -7,11 +7,11 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class CoreSenderService {
-  private sinalToLivreSource = new ReplaySubject<boolean>(1);
-  public sinalToLivre: Observable<boolean> = this.sinalToLivreSource.asObservable();
+  private sinalToLivreSource = new ReplaySubject<number>(1);
+  public sinalToLivre: Observable<number> = this.sinalToLivreSource.asObservable();
 
-  public SinalToLivre(): void {
-    this.sinalToLivreSource.next(true);
+  public SinalToLivre(coreIndex:number): void {
+    this.sinalToLivreSource.next(coreIndex);
   }
 
 }

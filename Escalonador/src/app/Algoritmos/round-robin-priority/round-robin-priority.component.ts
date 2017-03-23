@@ -132,10 +132,8 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
     return processo;
   }
 
-  private EnviarProCore(isFree: boolean): void {
-    if (!isFree)
-      return;
-
+  private EnviarProCore(coreIndex: number): void {
+   
     
   }
 

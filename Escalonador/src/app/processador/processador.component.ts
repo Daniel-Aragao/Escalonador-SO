@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ProcessSenderService } from '../services/process-sender.service';
+import { CoreSenderService } from '../services/core-sender.service';
+
 import { ProcessoViewModel } from '../models/ProcessoViewModel';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -16,7 +18,7 @@ export class ProcessadorComponent implements OnInit {
   private subscription: Subscription;
   private cores: CoreViewModel[] = [];
 
-  constructor(private ProcessSenderService: ProcessSenderService) {
+  constructor(private ProcessSenderService: ProcessSenderService,private CoreSenderService: CoreSenderService) {
 
   }
 
@@ -24,7 +26,8 @@ export class ProcessadorComponent implements OnInit {
     this.subscription = this.ProcessSenderService.addProccess.subscribe(
       (p: ProcessoViewModel) => this.addToLine(p));
 
-    this.Loop();
+
+    this.Loop(this);
 
   }
 
@@ -36,19 +39,23 @@ export class ProcessadorComponent implements OnInit {
     }
   }
 
-  private Loop(): void {
-    while(this.running){
-      this.VarrerCores();
+  private Loop(self: any): void {
 
+    //this.VarrerCores();
+    console.log('loop')
+    if(self.running){
+      setTimeout(function () {
+        self.Loop(self);
+      }, 50);
     }
   }
 
   private VarrerCores(): void {
-    this.cores.forEach(core => {
+    this.cores.forEach((core, index) => {
       if (!core.Processo) {
         // pedir processo
-      }
-      
+        this.CoreSenderService.SinalToLivre(index);
+      }      
     });
   }
 
