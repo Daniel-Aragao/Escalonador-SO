@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+import { ProcessoViewModel } from "../../models/ProcessoViewModel";
+
 @Component({
   selector: 'esc-core',
   templateUrl: './core.component.html',
@@ -8,7 +10,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class CoreComponent implements OnInit {
 
   @Input()
-  core: any;
+  core: ProcessoViewModel;
 
   constructor() { }
 

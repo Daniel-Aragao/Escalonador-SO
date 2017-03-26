@@ -12,7 +12,7 @@ import { Processo } from "../../models/Processo";
 export class AddProccessComponent implements OnInit {
   newProcess: NewProcessViewModel[];
 
-  constructor(private processFactory: ProcessFactoryService, private processSender: ProcessSenderService) { 
+  constructor(private processFactory: ProcessFactoryService, private processSender: ProcessSenderService) {
     this.newProcess = [];
   }
 
@@ -39,21 +39,25 @@ export class AddProccessComponent implements OnInit {
   }
 
   public onClickEnviarProcessos() {
+    //console.log(this.newProcess)
+    if (this.newProcess.length === 0)
+      return;
+
     if (this.newProcess.length == 1) {
-      this.processSender.SendProcess(this.newProcess[0].processo, "green");
+      this.processSender.OnNewProcess(this.newProcess[0].processo, "green");
     } else if (this.newProcess.length > 1) {
       var processos: Processo[] = [];
 
       this.newProcess.forEach((v, i, a) => processos.push(v.processo));
 
-      this.processSender.SendManyProcess(processos, "blue");      
+      this.processSender.OnNewManyProcess(processos, "blue");
     }
     this.newProcess = [];
   }
 
 }
 
-class NewProcessViewModel{
+class NewProcessViewModel {
   public processo: Processo;
   public processoInfo: any[];
 }

@@ -8,9 +8,9 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class CoreSenderService {
   private sinalToLivreSource = new ReplaySubject<number>(1);
-  public sinalToLivre: Observable<number> = this.sinalToLivreSource.asObservable();
+  public handleCoreLivre: Observable<number> = this.sinalToLivreSource.asObservable();
 
-  public SinalToLivre(coreIndex:number): void {
+  public OnCoreLivre(coreIndex: number): void {
     this.sinalToLivreSource.next(coreIndex);
   }
 

@@ -7,6 +7,7 @@ export class Processo {
     public TDeadline: number;
     public Prioridade: number;
     public EState: EProcessState;
+    public Quantum: number;
     
     constructor() { }
 }

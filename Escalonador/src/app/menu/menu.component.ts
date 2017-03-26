@@ -15,6 +15,8 @@ export class MenuComponent implements OnInit {
   private running: boolean;
 
   @Output() AlgoritmoSelecionado = new EventEmitter();
+  @Output() QuantidadeCores = new EventEmitter();
+  @Output() Quantum = new EventEmitter();
   @Output() RunningChanged = new EventEmitter();
 
   constructor(private processFactory: ProcessFactoryService, private processSender: ProcessSenderService) {
@@ -24,7 +26,7 @@ export class MenuComponent implements OnInit {
   ngOnInit() {
   }
 
-  public onChangeAlgoritmo(valor : number) {
+  public onChangeAlgoritmo(valor: number) {
     this.AlgoritmoSelecionado.emit(valor);
   }
 
@@ -32,9 +34,14 @@ export class MenuComponent implements OnInit {
     this.processFactory.resetPID();
     this.running = true;
     this.RunningChanged.emit(this.running);
+    this.QuantidadeCores.emit(this.MenuViewModel.QuantidadeCores);
+    this.Quantum.emit(this.MenuViewModel.Quantum);
 
+    if (this.MenuViewModel.QuantidadeProcessosIniciais === 0)
+      return;
+      
     var newProcess = this.processFactory.GenerateAnyProcess(this.MenuViewModel.QuantidadeProcessosIniciais);
-    this.processSender.SendManyProcess(newProcess, "red");
+    this.processSender.OnNewManyProcess(newProcess, "red");
   }
 
   public onClickStop() {

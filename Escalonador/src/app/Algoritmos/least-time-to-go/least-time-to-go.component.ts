@@ -20,7 +20,7 @@ export class LeastTimeToGoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.ProcessSenderService.addProccess.subscribe(
+    this.subscription = this.ProcessSenderService.handleNewProcess.subscribe(
       (p: ProcessoViewModel) => this.addToLine(p));
   }
 

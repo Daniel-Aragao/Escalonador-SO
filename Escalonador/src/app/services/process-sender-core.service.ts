@@ -9,9 +9,9 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class ProcessSenderToCoreService {
   private addProcessToCoreSource = new ReplaySubject<ProcessoViewModel>(1);
-  public addProccessToCore: Observable<ProcessoViewModel> = this.addProcessToCoreSource.asObservable();
+  public handleProcessoEscalonado: Observable<ProcessoViewModel> = this.addProcessToCoreSource.asObservable();
 
-  public SendManyProcess(ps: Processo[], color: string) {
+  public OnNewManyProcessoEscalonado(ps: Processo[], color: string) {
     var pvm = new ProcessoViewModel();
     pvm.GrupoProcessos = ps;
     pvm.isGroup = true;
@@ -20,11 +20,12 @@ export class ProcessSenderToCoreService {
     this.addProcessToCoreSource.next(pvm);  
   }
 
-  public SendProcess(p: Processo, color: string) {
+  public OnNewProcessoEscalonado(p: Processo, coreIndex: number, color: string) {
     var pvm = new ProcessoViewModel();
     pvm.Processo = p;
     pvm.isGroup = false;
     pvm.color = color;
+    pvm.coreIndex = coreIndex;
     this.addProcessToCoreSource.next(pvm);  
   }
 

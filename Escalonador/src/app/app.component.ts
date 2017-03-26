@@ -10,6 +10,8 @@ export class AppComponent {
   private algoritmo: number = 1;
   private processo: Processo;
   private running: Boolean;
+  private quantidadeCores: number;
+  private quantum: number;
 
   private RunningChanged(r: Boolean) {
     this.running = r;    
