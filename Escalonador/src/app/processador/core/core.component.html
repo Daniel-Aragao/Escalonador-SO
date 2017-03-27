@@ -1,25 +1,22 @@
-<div *ngIf="core.Processo">
-  <div class="processo-queue-item item-{{core.color}}">
-    <div>
-      <span class="item-pid">PID: {{core.Processo.PID}}</span>
-      <span class="item-duracao">Dur.: {{core.Processo.TDuracao}}s</span>
-    </div>
-    <div class="clearfix"></div>
-    <div *ngIf="showDeadline">
-      <span class="item-deadline item-center">{{core.Processo.TDeadline}}s</span>
-    </div>
-    <div *ngIf="!showDeadline">
-      <span class="item-priority item-center">{{core.Processo.Prioridade}}</span>
-    </div>
-    <div>
-      <span class="item-restante">Restante: {{core.Processo.TRestante}}s</span>
-    </div>
-
+<div *ngIf="core.Processo" class="processo-queue-item item-{{core.color}}">
+  <div>
+    <span class="item-pid">PID: {{core.Processo.PID}}</span>
+    <span class="item-duracao">Dur.: {{core.Processo.TDuracao}}s</span>
   </div>
+  <div class="clearfix"></div>
+  <div *ngIf="showDeadline">
+    <span class="item-deadline item-center">{{core.Processo.TDeadline}}s</span>
+  </div>
+  <div *ngIf="!showDeadline">
+    <span class="item-priority item-center">{{core.Processo.Prioridade}} - {{core.Processo.Quantum}}s</span>
+  </div>
+  <div>
+    <span class="item-restante">Restante: {{core.Processo.TRestante}}s</span>
+  </div>
+  <div class="clearfix"></div>
 </div>
 
-<div *ngIf="!core.Processo">
-  <div class="processo-queue-item">
-      <span class="item-priority item-center">Core Empty</span>
-  </div>
+<div *ngIf="!core.Processo" class="processo-queue-item">
+    <span class="item-priority item-center">Empty</span>
+    <div class="clearfix"></div>
 </div>

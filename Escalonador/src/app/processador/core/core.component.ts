@@ -9,8 +9,8 @@ import { ProcessoViewModel } from "../../models/ProcessoViewModel";
 })
 export class CoreComponent implements OnInit {
 
-  @Input()
-  core: ProcessoViewModel;
+  @Input() core: ProcessoViewModel;
+  @Input() showDeadline: boolean;
 
   constructor() { }
 

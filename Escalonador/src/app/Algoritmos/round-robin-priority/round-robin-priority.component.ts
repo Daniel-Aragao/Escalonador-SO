@@ -49,11 +49,11 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
 
   private HandleNewProcess(p: ProcessoViewModel) {
     if (!p.isGroup) {
-      p.Processo.Quantum = this.quantum + p.Processo.Prioridade;
+      p.Processo.Quantum = this.quantum * (4 - p.Processo.Prioridade);
       this.addProcessToQueue(null, null, p);
     } else {
       p.GrupoProcessos.forEach((v: Processo, i: number, a: Processo[]) => {
-        v.Quantum = this.quantum + v.Prioridade;
+        v.Quantum = this.quantum * (4 - v.Prioridade);
         this.addProcessToQueue(v, p.color)
       });
     }
@@ -75,13 +75,11 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
 
     if (this.IsExistProcess()) {
       processo = this.GetProcessoWithLessPriority();
+    }else{
+      return;
     }
 
-    if (processo == null)
-      return;
-    console.log(processo.color)
     this.ProcessSenderToCoreService.OnNewProcessoEscalonado(processo.Processo, coreIndex, processo.color);
-    this.processoQueues[this.cursorQueue - 1].Processos.splice(0, 1);
   }
 
   private IsExistProcess(): boolean {
@@ -94,30 +92,22 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
   }
 
   private GetProcessoWithLessPriority(): ProcessoViewModel {
-
-    const rodada = this.processoQueues.length;
-    let count: number = 0;
-    if (this.cursorQueue >= rodada)
-      this.cursorQueue = 0;
-
     let processo: ProcessoViewModel = null;
     let queue: ProcessoQueue = undefined;
     let processosVM: ProcessoViewModel[] = undefined;
 
     while (processo == null) {
-      if (count++ === rodada)
-        return null;
-
       queue = this.processoQueues[this.cursorQueue];
-      if (queue != undefined) {
-        processosVM = queue.Processos;
+      processosVM = queue.Processos;
 
-        if (processosVM.length > 0) {
-          processo = processosVM[0];
-        }
+      if (processosVM.length > 0) {
+        processo = processosVM.shift();
       }
 
       this.cursorQueue++;
+
+      if (this.cursorQueue >= this.processoQueues.length)
+        this.cursorQueue = 0;
     }
     return processo;
   }

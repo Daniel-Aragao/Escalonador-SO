@@ -1,3 +1,3 @@
-<div class="processo-queue" [class.unlimited-itens]="showDeadline">
+<div class="processo-queue" [class.unlimited-itens]="showDeadline" [class.cursor]="cursor">
   <esc-processo-queue-item *ngFor="let processo of processos" [showDeadline]="showDeadline" [processo]="processo"></esc-processo-queue-item>
 </div>

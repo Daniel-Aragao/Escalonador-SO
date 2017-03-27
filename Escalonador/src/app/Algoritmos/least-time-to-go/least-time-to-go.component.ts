@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProcessSenderService } from '../../services/process-sender.service';
+import { CoreSenderService } from '../../services/core-sender.service';
+import { ProcessSenderToCoreService } from "../../services/process-sender-core.service"
 import { Processo } from '../../models/Processo';
 import { ProcessoViewModel } from '../../models/ProcessoViewModel';
 
@@ -12,9 +14,13 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class LeastTimeToGoComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
+  private coreSenderSubscription: Subscription;
   private processos: ProcessoViewModel[];
 
-  constructor(private ProcessSenderService: ProcessSenderService) {
+  constructor(private ProcessSenderService: ProcessSenderService, 
+    private CoreSenderService: CoreSenderService,
+    private ProcessSenderToCoreService: ProcessSenderToCoreService) {
+
     this.processos = [];
     this.DeadlineKiller(this);
   }
@@ -22,6 +28,27 @@ export class LeastTimeToGoComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.ProcessSenderService.handleNewProcess.subscribe(
       (p: ProcessoViewModel) => this.addToLine(p));
+
+       this.coreSenderSubscription = this.CoreSenderService.handleCoreLivre.subscribe(
+      (value: number) => this.HandleCoreLivre(value));
+  }
+
+  private HandleCoreLivre(coreIndex: number): void {
+    let processo: ProcessoViewModel = null;
+
+    if (this.IsExistProcess()) {
+      processo = this.processos.shift();
+    }else{
+      return;
+    }
+
+    this.ProcessSenderToCoreService.OnNewProcessoEscalonado(processo.Processo, coreIndex, processo.color);
+  }
+
+  private IsExistProcess(): boolean {
+      if (this.processos.length > 0)
+        return true;
+    return false;
   }
 
   private addToLine(p: ProcessoViewModel) {
@@ -65,5 +92,6 @@ export class LeastTimeToGoComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.coreSenderSubscription.unsubscribe();
   }
 }

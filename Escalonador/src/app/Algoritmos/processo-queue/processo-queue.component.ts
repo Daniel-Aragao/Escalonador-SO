@@ -10,6 +10,7 @@ import { ProcessoViewModel } from '../../models/ProcessoViewModel';
 export class ProcessoQueueComponent implements OnInit {
   @Input() processos: ProcessoViewModel[];
   @Input() showDeadline: boolean;
+  @Input() cursor: boolean;
 
   constructor() { 
     

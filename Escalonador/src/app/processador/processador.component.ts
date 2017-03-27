@@ -15,10 +15,8 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class ProcessadorComponent implements OnInit {
 
-  @Input()
-  private running: boolean;
-  @Input()
-  private quantidadeCores: number;
+  @Input() private running: boolean;
+  @Input() private quantidadeCores: number;
   private subscription: Subscription;
   private cores: ProcessoViewModel[] = [];
 
@@ -38,26 +36,19 @@ export class ProcessadorComponent implements OnInit {
     for (var i = 0; i < this.quantidadeCores; i++) {
       this.cores[i] = new ProcessoViewModel();
     }
-    console.log(this.cores)
-
     this.Loop();
   }
 
   private HandleProcessoEscalonado(p: ProcessoViewModel) {
-    console.log(p);
-    if (!p.isGroup) {
-      //this.cores.push(new Pro p);
-      this.cores[p.coreIndex] = p;
-    } else {
-      //p.GrupoProcessos.forEach((v: Processo, i: number, a: Processo[]) => this.addProcessToQueue(v, p.color))
-    }
+    this.cores[p.coreIndex] = p;    
   }
 
   private Loop(): void {
     this.VarrerCores();
 
-    setTimeout(this.Loop, 1000);
-
+    if(this.running){
+      setTimeout(this.Loop, 1000);
+    }
   }
 
   private VarrerCores(): void {
@@ -65,8 +56,6 @@ export class ProcessadorComponent implements OnInit {
 
     this.cores.forEach((core, index) => {
       if (this.IsCoreLivre(core)) {
-
-        console.log("Pedindo Processo")
         this.CoreSenderService.OnCoreLivre(index);
       }
       else {
@@ -75,17 +64,16 @@ export class ProcessadorComponent implements OnInit {
         if (core.Processo.Quantum != undefined)
           core.Processo.Quantum--;
 
-        //console.log(core.Processo.Quantum);
-
         if (this.IsProcessoOver(core)) {
-          this.CoreSenderService.OnCoreLivre(index);
           this.cores[index] = new ProcessoViewModel();
+
+          setTimeout(() => this.CoreSenderService.OnCoreLivre(index), 100);
         } else if (this.IsQuantumOver(core)) {
-          this.ProcessSenderService.OnNewProcess(core.Processo, core.color);
           this.cores[index] = new ProcessoViewModel();
+          this.ProcessSenderService.OnNewProcess(core.Processo, core.color);
 
+          setTimeout(() => this.CoreSenderService.OnCoreLivre(index), 100);
         }
-
       }
     });
 
@@ -96,14 +84,14 @@ export class ProcessadorComponent implements OnInit {
   }
 
   private IsProcessoOver(core: ProcessoViewModel): boolean {
-    return (core.Processo.TRestante === 0);
+    return (core.Processo.TRestante <= 0);
   }
 
   private IsQuantumOver(core: ProcessoViewModel): boolean {
     if (core.Processo.Quantum == undefined)
       return false;
 
-    return (core.Processo.Quantum === 0);
+    return (core.Processo.Quantum <= 0);
   }
 
   ngOnDestroy() {
