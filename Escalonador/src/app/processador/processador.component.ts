@@ -32,12 +32,14 @@ export class ProcessadorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.subscription = this.ProcessSenderToCoreService.handleProcessoEscalonado.subscribe(
-      (p: ProcessoViewModel) => this.HandleProcessoEscalonado(p));
-
     for (var i = 0; i < this.quantidadeCores; i++) {
       this.cores[i] = new ProcessoViewModel();
     }
+    
+    this.subscription = this.ProcessSenderToCoreService.handleProcessoEscalonado.subscribe(
+      (p: ProcessoViewModel) => this.HandleProcessoEscalonado(p));
+
+
     this.Loop();
   }
 

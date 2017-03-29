@@ -1,4 +1,4 @@
-<div *ngIf="core.Processo" class="processo-queue-item item-{{core.color}}">
+<div *ngIf="core &&  core.Processo" class="processo-queue-item item-{{core.color}}">
   <span class="item-pid">PID: {{core.Processo.PID}}</span>
   <span class="space"></span>
   <span class="item-duracao">Dur.: {{core.Processo.TDuracao}}s</span>
@@ -12,7 +12,7 @@
   <span *ngIf="!showDeadline" class="item-restante">Restante: {{core.Processo.TRestante}}s</span>
 </div>
 
-<div *ngIf="!core.Processo" class="processo-queue-item">
+<div *ngIf="core &&  !core.Processo" class="processo-queue-item">
     <span class="item-priority item-center">Empty</span>
     <div class="clearfix"></div>
 </div>

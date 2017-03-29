@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 
 import { ProcessoViewModel } from "../../models/ProcessoViewModel";
 
@@ -7,7 +7,7 @@ import { ProcessoViewModel } from "../../models/ProcessoViewModel";
   templateUrl: './core.component.html',
   styleUrls: ['./core.component.css']
 })
-export class CoreComponent implements OnInit {
+export class CoreComponent implements OnInit, OnDestroy {
 
   @Input() core: ProcessoViewModel;
   @Input() showDeadline: boolean;
@@ -15,6 +15,11 @@ export class CoreComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy(){
+    this.core = new ProcessoViewModel;
+    this.showDeadline = false;
   }
 
 }
