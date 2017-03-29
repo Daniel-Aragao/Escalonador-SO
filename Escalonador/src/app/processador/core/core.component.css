@@ -1,8 +1,7 @@
 .processo-queue-item {
-    display: inline-block;
-    width: 100px;
-    height: 90px;
-    /*border: 1px solid #fdfdfd;*/
+    float: left;
+    min-width: 100px;
+    min-height: 90px;
     padding: 5px;
     border-radius: 5px;
     word-break: break-all;
@@ -24,7 +23,6 @@
 
 .item-center{
     font-size: 30px;
-    line-height: 150%;
 }
 
 .item-red{
@@ -40,4 +38,13 @@
 .item-green{
     background-color: #11964b;
     color: white;
+}
+
+.space{
+    height: 1px;
+    width: 2px;
+}
+
+.item-restante{
+    display: block;
 }

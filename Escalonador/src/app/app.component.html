@@ -7,7 +7,7 @@
   </div>
   <div *ngIf="running">
     <div class="col-md-5">
-      <esc-processador [running]='running' [quantidadeCores]="quantidadeCores"></esc-processador>
+      <esc-processador [showDeadline]='algoritmo==2' [running]='running' [quantidadeCores]="quantidadeCores"></esc-processador>
     </div>
     <div class="col-md-7">
       <div [ngSwitch]="algoritmo">

@@ -17,8 +17,10 @@ export class ProcessadorComponent implements OnInit {
 
   @Input() private running: boolean;
   @Input() private quantidadeCores: number;
+  @Input() private showDeadline: boolean;
   private subscription: Subscription;
   private cores: ProcessoViewModel[] = [];
+  private pause:boolean = false;
 
   private count: number = 0;
 
@@ -44,9 +46,11 @@ export class ProcessadorComponent implements OnInit {
   }
 
   private Loop(): void {
-    this.VarrerCores();
+    if(!this.pause){
+      this.VarrerCores();
+    }
 
-    if(this.running){
+    if(this.running ){
       setTimeout(this.Loop, 1000);
     }
   }
@@ -96,6 +100,7 @@ export class ProcessadorComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.cores = [];
   }
 
 }
