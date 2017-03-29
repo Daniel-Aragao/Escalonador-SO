@@ -17,6 +17,8 @@ import { ProcessSenderToCoreService } from './services/process-sender-core.servi
 import { CoreSenderService } from './services/core-sender.service';
 import { ProcessoQueueComponent } from './Algoritmos/processo-queue/processo-queue.component';
 import { ProcessoQueueItemComponent } from './Algoritmos/processo-queue/processo-queue-item/processo-queue-item.component';
+import { KillProcessService } from './services/kill-process.service';
+import { ConcluidosComponent } from './concluidos/concluidos.component';
 
 @NgModule({
   declarations: [
@@ -28,14 +30,20 @@ import { ProcessoQueueItemComponent } from './Algoritmos/processo-queue/processo
     LeastTimeToGoComponent,
     AddProccessComponent,
     ProcessoQueueComponent,
-    ProcessoQueueItemComponent
+    ProcessoQueueItemComponent,
+    ConcluidosComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule
   ],
-  providers: [ProcessFactoryService, ProcessSenderService, CoreSenderService, ProcessSenderToCoreService],
+  providers: [
+    ProcessFactoryService, 
+    ProcessSenderService, 
+    CoreSenderService, 
+    ProcessSenderToCoreService,
+    KillProcessService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

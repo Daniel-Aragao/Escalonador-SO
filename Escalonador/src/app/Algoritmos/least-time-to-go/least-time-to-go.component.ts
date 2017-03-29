@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProcessSenderService } from '../../services/process-sender.service';
 import { CoreSenderService } from '../../services/core-sender.service';
 import { ProcessSenderToCoreService } from "../../services/process-sender-core.service"
+import { KillProcessService } from '../../services/kill-process.service';
 import { Processo } from '../../models/Processo';
 import { ProcessoViewModel } from '../../models/ProcessoViewModel';
 
@@ -19,7 +20,8 @@ export class LeastTimeToGoComponent implements OnInit, OnDestroy {
 
   constructor(private ProcessSenderService: ProcessSenderService, 
     private CoreSenderService: CoreSenderService,
-    private ProcessSenderToCoreService: ProcessSenderToCoreService) {
+    private ProcessSenderToCoreService: ProcessSenderToCoreService,
+    private KillProcessService: KillProcessService) {
 
     this.processos = [];
     this.DeadlineKiller(this);
@@ -81,7 +83,8 @@ export class LeastTimeToGoComponent implements OnInit, OnDestroy {
       var processo = this.processos[i].Processo;
       processo.TDeadline--;
       if (processo.TDeadline <= 0) {
-        this.processos.splice(i, 1);
+        var deleted = this.processos.splice(i, 1);
+        this.KillProcessService.OnKillProcess(deleted[0], false);
         i--;
       }
     }

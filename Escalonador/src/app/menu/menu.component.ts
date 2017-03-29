@@ -31,22 +31,28 @@ export class MenuComponent implements OnInit {
   }
 
   public onClickStart(): void {
-    this.processFactory.resetPID();
-    this.running = true;
-    this.RunningChanged.emit(this.running);
-    this.QuantidadeCores.emit(this.MenuViewModel.QuantidadeCores);
-    this.Quantum.emit(this.MenuViewModel.Quantum);
 
-    if (this.MenuViewModel.QuantidadeProcessosIniciais === 0)
-      return;
-      
-    var newProcess = this.processFactory.GenerateAnyProcess(this.MenuViewModel.QuantidadeProcessosIniciais);
-    this.processSender.OnNewManyProcess(newProcess, "red");
+    if (this.MenuViewModel.QuantidadeProcessosIniciais <= 0){
+      alert('Número de processos deve ser maior que zero');      
+    }else if(this.MenuViewModel.QuantidadeCores < 1 || this.MenuViewModel.QuantidadeCores > 64){
+      alert('Número de cores deve ser maior que 0 e menor que 65');    
+    }else if(this.MenuViewModel.Quantum < 2 || this.MenuViewModel.Quantum > 20){
+      alert('Quantum deve ser maior que 1 e menor que 21');
+    }else{
+      this.processFactory.resetPID();
+      this.running = true;
+      this.RunningChanged.emit(this.running);
+      this.QuantidadeCores.emit(this.MenuViewModel.QuantidadeCores);
+      this.Quantum.emit(this.MenuViewModel.Quantum);
+      var newProcess = this.processFactory.GenerateAnyProcess(this.MenuViewModel.QuantidadeProcessosIniciais);
+      this.processSender.OnNewManyProcess(newProcess, "red");
+    }
   }
 
   public onClickStop() {
     this.running = false;
     this.RunningChanged.emit(this.running);
+    this.MenuViewModel = new MenuViewModel();
   }
 
 }

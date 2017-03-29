@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { ProcessSenderToCoreService } from '../services/process-sender-core.service';
 import { CoreSenderService } from '../services/core-sender.service';
 import { ProcessSenderService } from '../services/process-sender.service';
+import { KillProcessService } from '../services/kill-process.service';
 
 import { ProcessoViewModel } from '../models/ProcessoViewModel';
 import { CoreViewModel } from "../models/CoreViewModel";
@@ -13,7 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './processador.component.html',
   styleUrls: ['./processador.component.css']
 })
-export class ProcessadorComponent implements OnInit {
+export class ProcessadorComponent implements OnInit, OnDestroy {
 
   @Input() private running: boolean;
   @Input() private quantidadeCores: number;
@@ -26,7 +27,8 @@ export class ProcessadorComponent implements OnInit {
 
   constructor(private ProcessSenderToCoreService: ProcessSenderToCoreService,
     private CoreSenderService: CoreSenderService,
-    private ProcessSenderService: ProcessSenderService) {
+    private ProcessSenderService: ProcessSenderService,
+    private KillProcessService: KillProcessService) {
     this.HandleProcessoEscalonado = this.HandleProcessoEscalonado.bind(this);
     this.Loop = this.Loop.bind(this);
   }
@@ -72,6 +74,7 @@ export class ProcessadorComponent implements OnInit {
 
         if (this.IsProcessoOver(core)) {
           this.cores[index] = new ProcessoViewModel();
+          this.KillProcessService.OnKillProcess(core, true);
 
           setTimeout(() => this.CoreSenderService.OnCoreLivre(index), 100);
         } else if (this.IsQuantumOver(core)) {
@@ -94,8 +97,9 @@ export class ProcessadorComponent implements OnInit {
   }
 
   private IsQuantumOver(core: ProcessoViewModel): boolean {
-    if (core.Processo.Quantum == undefined)
+    if (core.Processo.Quantum == undefined){
       return false;
+    }
 
     return (core.Processo.Quantum <= 0);
   }

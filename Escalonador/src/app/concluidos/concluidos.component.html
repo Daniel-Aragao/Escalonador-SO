@@ -1,0 +1,9 @@
+<div class="panel panel-info">
+  <div class="panel-heading">Concluídos</div>
+  <div class="panel-body">
+    <h4>Finalizados</h4>
+    <esc-processo-queue [showDeadline]=showDeadline [processos]="Finished"></esc-processo-queue>
+    <h4>Não finalizados</h4>
+    <esc-processo-queue [showDeadline]=showDeadline [processos]="Unfinished"></esc-processo-queue>
+  </div>
+</div>
