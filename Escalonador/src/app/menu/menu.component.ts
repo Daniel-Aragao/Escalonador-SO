@@ -15,6 +15,8 @@ export class MenuComponent implements OnInit {
   private running: boolean;
 
   @Output() AlgoritmoSelecionado = new EventEmitter();
+  @Output() QuantidadeCores = new EventEmitter();
+  @Output() Quantum = new EventEmitter();
   @Output() RunningChanged = new EventEmitter();
 
   constructor(private processFactory: ProcessFactoryService, private processSender: ProcessSenderService) {
@@ -24,22 +26,33 @@ export class MenuComponent implements OnInit {
   ngOnInit() {
   }
 
-  public onChangeAlgoritmo(valor : number) {
+  public onChangeAlgoritmo(valor: number) {
     this.AlgoritmoSelecionado.emit(valor);
   }
 
   public onClickStart(): void {
-    this.processFactory.resetPID();
-    this.running = true;
-    this.RunningChanged.emit(this.running);
 
-    var newProcess = this.processFactory.GenerateAnyProcess(this.MenuViewModel.QuantidadeProcessosIniciais);
-    this.processSender.SendManyProcess(newProcess, "red");
+    if (this.MenuViewModel.QuantidadeProcessosIniciais <= 0){
+      alert('Número de processos deve ser maior que zero');      
+    }else if(this.MenuViewModel.QuantidadeCores < 1 || this.MenuViewModel.QuantidadeCores > 64){
+      alert('Número de cores deve ser maior que 0 e menor que 65');    
+    }else if(this.MenuViewModel.Quantum < 2 || this.MenuViewModel.Quantum > 20){
+      alert('Quantum deve ser maior que 1 e menor que 21');
+    }else{
+      this.processFactory.resetPID();
+      this.running = true;
+      this.RunningChanged.emit(this.running);
+      this.QuantidadeCores.emit(this.MenuViewModel.QuantidadeCores);
+      this.Quantum.emit(this.MenuViewModel.Quantum);
+      var newProcess = this.processFactory.GenerateAnyProcess(this.MenuViewModel.QuantidadeProcessosIniciais);
+      this.processSender.OnNewManyProcess(newProcess, "red");
+    }
   }
 
   public onClickStop() {
     this.running = false;
     this.RunningChanged.emit(this.running);
+    this.MenuViewModel = new MenuViewModel();
   }
 
 }

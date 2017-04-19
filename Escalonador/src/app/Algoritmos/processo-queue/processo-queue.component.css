@@ -17,3 +17,7 @@
 .processo-queue:hover{
     background-color: #f5f5f5;
 }
+
+.cursor{
+    border-color: red;
+}

@@ -1,23 +1,26 @@
 <div class="">
   <div class="col-md-12">
-    <esc-menu (AlgoritmoSelecionado)="algoritmo = $event" (RunningChanged)="running = $event" ></esc-menu>
+    <esc-menu (AlgoritmoSelecionado)="algoritmo = $event" 
+              (RunningChanged)="running = $event" 
+              (QuantidadeCores)="quantidadeCores = $event"
+              (Quantum)="quantum = $event"></esc-menu>
   </div>
   <div *ngIf="running">
     <div class="col-md-5">
-      <esc-processador></esc-processador>
+      <esc-processador [showDeadline]='algoritmo==2' [running]='running' [quantidadeCores]="quantidadeCores"></esc-processador>
     </div>
     <div class="col-md-7">
       <div [ngSwitch]="algoritmo">
         <div *ngSwitchCase="1">
-          <esc-round-robin-priority></esc-round-robin-priority>
+          <esc-round-robin-priority [quantum]="quantum"></esc-round-robin-priority>
         </div>
         <div *ngSwitchCase="2">
           <esc-least-time-to-go></esc-least-time-to-go>
         </div>
-        <div *ngSwitchCase="3">
-          
-        </div>
       </div>
+    </div>
+    <div class="col-md-12">
+      <esc-concluidos [showDeadline]='algoritmo==2'></esc-concluidos>
     </div>
   </div>
 </div>

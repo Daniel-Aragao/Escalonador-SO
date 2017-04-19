@@ -9,23 +9,24 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class ProcessSenderService {
   private addProcessSource = new ReplaySubject<ProcessoViewModel>(1);
-  public addProccess: Observable<ProcessoViewModel> = this.addProcessSource.asObservable();
+  public handleNewProcess: Observable<ProcessoViewModel> = this.addProcessSource.asObservable();
 
-  public SendManyProcess(ps: Processo[], color: string) {
+  public OnNewManyProcess(ps: Processo[], color: string) {
     var pvm = new ProcessoViewModel();
     pvm.GrupoProcessos = ps;
     pvm.isGroup = true;
     pvm.color = color;
-    
-    this.addProcessSource.next(pvm);  
+
+    this.addProcessSource.next(pvm);
   }
 
-  public SendProcess(p: Processo, color: string) {
+  public OnNewProcess(p: Processo, color: string) {
     var pvm = new ProcessoViewModel();
     pvm.Processo = p;
     pvm.isGroup = false;
     pvm.color = color;
-    this.addProcessSource.next(pvm);  
+
+    this.addProcessSource.next(pvm);
   }
 
 }
