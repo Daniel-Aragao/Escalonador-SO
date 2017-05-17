@@ -8,6 +8,7 @@ export class Processo {
     public Prioridade: number;
     public EState: EProcessState;
     public Quantum: number;
+    public QuantidadeBytes: number;
     
     constructor() { }
 }
