@@ -5,7 +5,7 @@
       <div class="col-md-3">
         <div class="form-group">
           <label for="" class="col-md-12">Algoritmo de alocação de memória</label>
-          <select (change)="onChangeAlgoritmo($event.target.value)" class="form-control">
+          <select (change)="onChangeAlgoritmo($event.target.value)" class="form-control" [disabled]="running">
             <option value="1">Merge fit</option>
             <option value="2">Quick fit</option>
             <option value="3">Best fit</option>
@@ -15,20 +15,20 @@
       <div class="col-md-3">
         <div class="form-group">
           <label for="" class="col-md-12">Tamanho total da memória</label>
-          <input [(ngModel)]="ViewModel.size" type="number" class="form-control">
+          <input [(ngModel)]="ViewModel.size" type="number" class="form-control" [disabled]="running">
         </div>
       </div>
       <div *ngIf="ViewModel.algoritmo == 2">
         <div class="col-md-3">
           <div class="form-group">
             <label for="" class="col-md-12">Quantidade de listas</label>
-            <input [(ngModel)]="ViewModel.qtdLista" type="number" class="form-control">
+            <input [(ngModel)]="ViewModel.qtdLista" type="number" class="form-control" [disabled]="running">
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
             <label for="" class="col-md-12">Intervalo de requisições</label>
-            <input [(ngModel)]="ViewModel.intervalo" type="number" class="form-control">
+            <input [(ngModel)]="ViewModel.intervalo" type="number" class="form-control" [disabled]="running">
           </div>
         </div>
       </div>

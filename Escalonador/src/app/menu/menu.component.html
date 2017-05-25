@@ -31,7 +31,11 @@
       </div>
     </div>
     <div *ngIf="algoritmo == 1" class="">
-      <esc-memory-menu></esc-memory-menu>
+      <esc-memory-menu [running]="running" (ViewModelEmitter)="onGetMemoryViewModel($event)"></esc-memory-menu>
+    </div>
+    <!--getMemoryViewModel($event.target.value)-->
+    <div class="">
+      <span>algoritmo: {{MemoryViewModel?.algoritmo}}</span>
     </div>
     <div *ngIf="running" class="row">
       <esc-add-proccess></esc-add-proccess>

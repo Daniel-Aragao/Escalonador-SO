@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Processo } from "../models/Processo";
 import { MenuViewModel } from "../models/MenuViewModel";
+import { MemoryMenuViewModel } from '../models/MemoryMenuViewModel';
 import { ProcessFactoryService } from '../services/process-factory.service';
 import { ProcessSenderService } from '../services/process-sender.service';
 
@@ -12,6 +13,7 @@ import { ProcessSenderService } from '../services/process-sender.service';
 
 export class MenuComponent implements OnInit {
   private MenuViewModel: MenuViewModel;
+  private MemoryViewModel: MemoryMenuViewModel;
   private running: boolean;
   private algoritmo: number;
 
@@ -23,14 +25,21 @@ export class MenuComponent implements OnInit {
   constructor(private processFactory: ProcessFactoryService, private processSender: ProcessSenderService) {
     this.MenuViewModel = new MenuViewModel();
     this.algoritmo = 1;
+    console.log("ctor")
   }
 
   ngOnInit() {
+    console.log("init")
   }
 
   public onChangeAlgoritmo(valor: number) {
     this.AlgoritmoSelecionado.emit(valor);
     this.algoritmo = valor;
+  }
+
+  public onGetMemoryViewModel(vm : MemoryMenuViewModel){
+    console.log(vm);
+    this.MemoryViewModel = vm;
   }
 
   public onClickStart(): void {
@@ -44,9 +53,11 @@ export class MenuComponent implements OnInit {
     }else{
       this.processFactory.resetPID();
       this.running = true;
+
       this.RunningChanged.emit(this.running);
       this.QuantidadeCores.emit(this.MenuViewModel.QuantidadeCores);
       this.Quantum.emit(this.MenuViewModel.Quantum);
+      
       var newProcess = this.processFactory.GenerateAnyProcess(this.MenuViewModel.QuantidadeProcessosIniciais);
       this.processSender.OnNewManyProcess(newProcess, "red");
     }

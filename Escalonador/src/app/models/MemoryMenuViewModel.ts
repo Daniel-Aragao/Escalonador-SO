@@ -5,6 +5,6 @@ export class MemoryMenuViewModel{
     public intervalo: number;
     
     constructor() {
-        
+        this.algoritmo = 1;
     }
 }
