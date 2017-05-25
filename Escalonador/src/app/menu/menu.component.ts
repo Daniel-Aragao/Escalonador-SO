@@ -13,6 +13,7 @@ import { ProcessSenderService } from '../services/process-sender.service';
 export class MenuComponent implements OnInit {
   private MenuViewModel: MenuViewModel;
   private running: boolean;
+  private algoritmo: number;
 
   @Output() AlgoritmoSelecionado = new EventEmitter();
   @Output() QuantidadeCores = new EventEmitter();
@@ -21,6 +22,7 @@ export class MenuComponent implements OnInit {
 
   constructor(private processFactory: ProcessFactoryService, private processSender: ProcessSenderService) {
     this.MenuViewModel = new MenuViewModel();
+    this.algoritmo = 1;
   }
 
   ngOnInit() {
@@ -28,6 +30,7 @@ export class MenuComponent implements OnInit {
 
   public onChangeAlgoritmo(valor: number) {
     this.AlgoritmoSelecionado.emit(valor);
+    this.algoritmo = valor;
   }
 
   public onClickStart(): void {

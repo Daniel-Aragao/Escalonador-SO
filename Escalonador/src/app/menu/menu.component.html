@@ -13,15 +13,15 @@
         </div>
       </div>
       <div class="col-md-2">
-        <label for="sel1">Processos inicias</label>
+        <label for="">Processos inicias</label>
         <input type="number" [(ngModel)]="MenuViewModel.QuantidadeProcessosIniciais" class="form-control" min=0 [disabled]="running">
       </div>
       <div class="col-md-2">
-        <label for="sel1">Cores (1 a 64)</label>
+        <label for="">Cores (1 a 64)</label>
         <input type="number" [(ngModel)]="MenuViewModel.QuantidadeCores" class="form-control" min=1 max=64 [disabled]="running">
       </div>
       <div class="col-md-2">
-        <label for="sel1">Quantum (2 a 20)</label>
+        <label for="">Quantum (2 a 20)</label>
         <input type="number" [(ngModel)]="MenuViewModel.Quantum" class="form-control" min=2 max=20 [disabled]="running">
       </div>
       <div class="col-md-2">
@@ -29,6 +29,9 @@
         <button *ngIf="!running" class="btn btn-success col-md-12" (click)="onClickStart()">Iniciar</button>
         <button *ngIf="running" class="btn btn-danger col-md-12" (click)="onClickStop()">Parar</button>
       </div>
+    </div>
+    <div *ngIf="algoritmo == 1" class="">
+      <esc-memory-menu></esc-memory-menu>
     </div>
     <div *ngIf="running" class="row">
       <esc-add-proccess></esc-add-proccess>

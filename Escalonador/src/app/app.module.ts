@@ -19,6 +19,7 @@ import { ProcessoQueueComponent } from './Algoritmos/processo-queue/processo-que
 import { ProcessoQueueItemComponent } from './Algoritmos/processo-queue/processo-queue-item/processo-queue-item.component';
 import { KillProcessService } from './services/kill-process.service';
 import { ConcluidosComponent } from './concluidos/concluidos.component';
+import { MemoryMenuComponent } from './NP2/memory-menu/memory-menu.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { ConcluidosComponent } from './concluidos/concluidos.component';
     AddProccessComponent,
     ProcessoQueueComponent,
     ProcessoQueueItemComponent,
-    ConcluidosComponent
+    ConcluidosComponent,
+    MemoryMenuComponent
   ],
   imports: [
     BrowserModule,
