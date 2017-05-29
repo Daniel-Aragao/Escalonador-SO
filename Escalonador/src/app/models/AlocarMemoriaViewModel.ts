@@ -1,4 +1,4 @@
-export class AlocacaoMemoriaViewModel {
+export class AlocarMemoriaViewModel {
 
     constructor(private processoId: number, private tamanhoAlocacao: number) {        
         this.tamanhoAlocacao = tamanhoAlocacao;

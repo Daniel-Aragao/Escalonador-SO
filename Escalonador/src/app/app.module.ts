@@ -20,6 +20,8 @@ import { ProcessoQueueItemComponent } from './Algoritmos/processo-queue/processo
 import { KillProcessService } from './services/kill-process.service';
 import { ConcluidosComponent } from './concluidos/concluidos.component';
 import { MemoryMenuComponent } from './NP2/memory-menu/memory-menu.component';
+import { AlocacarMemoriaService } from './services/alocacar-memoria.service';
+import { GerenciadorMemoriaComponent } from './NP2/gerenciador-memoria/gerenciador-memoria.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,8 @@ import { MemoryMenuComponent } from './NP2/memory-menu/memory-menu.component';
     ProcessoQueueComponent,
     ProcessoQueueItemComponent,
     ConcluidosComponent,
-    MemoryMenuComponent
+    MemoryMenuComponent,
+    GerenciadorMemoriaComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +48,9 @@ import { MemoryMenuComponent } from './NP2/memory-menu/memory-menu.component';
     ProcessSenderService, 
     CoreSenderService, 
     ProcessSenderToCoreService,
-    KillProcessService],
+    KillProcessService,
+    AlocacarMemoriaService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
