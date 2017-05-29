@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class ProcessSenderService {
+  // 1 for avoid cache
   private addProcessSource = new ReplaySubject<ProcessoViewModel>(1);
   public handleNewProcess: Observable<ProcessoViewModel> = this.addProcessSource.asObservable();
 

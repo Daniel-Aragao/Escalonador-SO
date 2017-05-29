@@ -11,7 +11,8 @@ export class RequisicaoAlocacaoMemoriaService {
   public handleNewProcess: Observable<AlocacaoMemoriaViewModel> = this.requisicaoAlocacaoMemoriaSource.asObservable();
 
   public OnRequisicaoAlocacaoMemoria(tamanhoAlocacao: number, processoId: number) {
-    let requisicao = new AlocacaoMemoriaViewModel();
+    let requisicao = new AlocacaoMemoriaViewModel(processoId, tamanhoAlocacao);
+    
     this.requisicaoAlocacaoMemoriaSource.next(requisicao);
   }
 
