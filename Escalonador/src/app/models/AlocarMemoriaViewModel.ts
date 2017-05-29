@@ -1,15 +1,15 @@
+import { ProcessoViewModel } from "../models/ProcessoViewModel"
+
 export class AlocarMemoriaViewModel {
 
-    constructor(private processoId: number, private tamanhoAlocacao: number) {        
-        this.tamanhoAlocacao = tamanhoAlocacao;
-        this.processoId = processoId;
+    constructor(private ProcessoViewModel: ProcessoViewModel) {
     }
 
     public getTamanho(): number{
-        return this.tamanhoAlocacao;
+        return this.ProcessoViewModel.Processo.QuantidadeBytes;
     }
 
     public getPID(): number{
-        return this.processoId;
+        return this.ProcessoViewModel.Processo.PID;
     }
 }

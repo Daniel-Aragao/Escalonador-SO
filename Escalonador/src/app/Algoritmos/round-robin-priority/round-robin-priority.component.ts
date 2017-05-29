@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ProcessSenderService } from '../../services/process-sender.service';
 import { CoreSenderService } from '../../services/core-sender.service';
-import { ProcessSenderToCoreService } from "../../services/process-sender-core.service"
+import { ProcessSenderToCoreService } from "../../services/process-sender-core.service";
+import { AlocarMemoriaService } from "../../services/alocar-memoria.service";
 import { Processo } from '../../models/Processo';
 import { ProcessoViewModel } from '../../models/ProcessoViewModel';
 import { ProcessoQueue } from "../../models/ProcessoQueue";
@@ -24,7 +25,8 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
 
   constructor(private ProcessSenderService: ProcessSenderService,
     private CoreSenderService: CoreSenderService,
-    private ProcessSenderToCoreService: ProcessSenderToCoreService) {
+    private ProcessSenderToCoreService: ProcessSenderToCoreService,
+    private AlocarMemoriaService: AlocarMemoriaService) {
 
     this.processoQueues = [];
     for (var i = 0; i < 4; i++) {
@@ -78,8 +80,9 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
     }else{
       return;
     }
-
-    this.ProcessSenderToCoreService.OnNewProcessoEscalonado(processo.Processo, coreIndex, processo.color);
+    processo.coreIndex = coreIndex;
+    this.AlocarMemoriaService.OnRequisicaoAlocacaoMemoria(processo)
+    //this.ProcessSenderToCoreService.OnNewProcessoEscalonado(processo.Processo, processo.coreIndex, processo.color);
   }
 
   private IsExistProcess(): boolean {
