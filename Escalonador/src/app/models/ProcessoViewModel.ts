@@ -8,4 +8,8 @@ export class ProcessoViewModel{
     // Processo queue deve separar o grupo de processos em vários processos view model
     public GrupoProcessos: Processo[];
     public finished: boolean;
+
+    public isFake: boolean = false;
+
+    
 }

@@ -74,11 +74,13 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
 
         if (this.IsProcessoOver(core)) {
           this.cores[index] = new ProcessoViewModel();
+          this.cores[index].isFake = true;
           this.KillProcessService.OnKillProcess(core, true);
 
           setTimeout(() => this.CoreSenderService.OnCoreLivre(index), 100);
         } else if (this.IsQuantumOver(core)) {
           this.cores[index] = new ProcessoViewModel();
+          this.cores[index].isFake = true;
           this.ProcessSenderService.OnNewProcess(core.Processo, core.color);
 
           setTimeout(() => this.CoreSenderService.OnCoreLivre(index), 100);
@@ -89,7 +91,7 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
   }
 
   private IsCoreLivre(core: ProcessoViewModel): boolean {
-    return (!core.Processo);
+    return (!core.Processo && !core.isFake);
   }
 
   private IsProcessoOver(core: ProcessoViewModel): boolean {

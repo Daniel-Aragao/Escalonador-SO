@@ -20,7 +20,7 @@ import { ProcessoQueueItemComponent } from './Algoritmos/processo-queue/processo
 import { KillProcessService } from './services/kill-process.service';
 import { ConcluidosComponent } from './concluidos/concluidos.component';
 import { MemoryMenuComponent } from './NP2/memory-menu/memory-menu.component';
-import { AlocacarMemoriaService } from './services/alocacar-memoria.service';
+import { AlocarMemoriaService } from './services/alocar-memoria.service';
 import { GerenciadorMemoriaComponent } from './NP2/gerenciador-memoria/gerenciador-memoria.component';
 
 @NgModule({
@@ -49,7 +49,7 @@ import { GerenciadorMemoriaComponent } from './NP2/gerenciador-memoria/gerenciad
     CoreSenderService, 
     ProcessSenderToCoreService,
     KillProcessService,
-    AlocacarMemoriaService
+    AlocarMemoriaService
   ],
   bootstrap: [AppComponent]
 })
