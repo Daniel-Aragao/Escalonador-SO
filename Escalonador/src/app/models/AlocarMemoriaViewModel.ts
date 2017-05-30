@@ -1,8 +1,10 @@
 import { ProcessoViewModel } from "../models/ProcessoViewModel"
 
 export class AlocarMemoriaViewModel {
+    public ProcessoViewModel: ProcessoViewModel;
 
-    constructor(private ProcessoViewModel: ProcessoViewModel) {
+    constructor(p: ProcessoViewModel) {
+        this.ProcessoViewModel = p;
     }
 
     public getTamanho(): number{

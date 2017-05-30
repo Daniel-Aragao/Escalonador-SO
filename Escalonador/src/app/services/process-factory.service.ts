@@ -38,7 +38,7 @@ export class ProcessFactoryService {
     processo.TDuracao = this.RandomNumber(10, 31);
     processo.TRestante = processo.TDuracao;
     processo.TDeadline = this.RandomNumber(4, 21);
-    processo.QuantidadeBytes = this.RandomNumber(32, 1025);
+    processo.QuantidadeBytes = this.QuantidadeBytes();
 
     processo.Prioridade = this.RandomNumber(0, 4);
 
@@ -49,8 +49,12 @@ export class ProcessFactoryService {
     return processo;
   }
 
-  private RandomNumber(start, end): number {
+  public RandomNumber(start, end): number {
     return Math.floor(Math.random() * end) + start;
+  }
+
+  public QuantidadeBytes(){
+    return this.RandomNumber(32, 1025);
   }
 
 }

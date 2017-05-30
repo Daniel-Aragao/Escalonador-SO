@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AlocarMemoriaService } from '../../services/alocar-memoria.service';
+import { RespostaMemoriaService } from '../../services/resposta-memoria.service';
 import { AlocarMemoriaViewModel } from '../../models/AlocarMemoriaViewModel';
+
+import { ProcessoViewModel } from '../../models/ProcessoViewModel';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -15,12 +18,13 @@ export class GerenciadorMemoriaComponent implements OnInit {
 
   private memoria = null;
 
-  constructor(private AlocacarMemoriaService: AlocarMemoriaService) {
+  constructor(private AlocarMemoriaService: AlocarMemoriaService,
+              private RespostaMemoriaService: RespostaMemoriaService) {
     this.HandleNewProcess = this.HandleNewProcess.bind(this);
    }
 
   ngOnInit() {
-    this.AlocarMemoriaSubscription = this.AlocacarMemoriaService.handleNewProcess.subscribe(
+    this.AlocarMemoriaSubscription = this.AlocarMemoriaService.handleNewProcess.subscribe(
       (a: AlocarMemoriaViewModel) => this.HandleNewProcess(a)
     );
 
@@ -28,8 +32,9 @@ export class GerenciadorMemoriaComponent implements OnInit {
       // (p: ProcessoViewModel) => this.HandleNewProcess(p));
   }
 
-  HandleNewProcess(a: AlocarMemoriaViewModel){
+  HandleNewProcess(a: AlocarMemoriaViewModel): void{
 
+    this.RespostaMemoriaService.OnRespostaAlocacaoMemoria(a);
   }
   
 

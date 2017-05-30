@@ -1,4 +1,5 @@
 import { EProcessState } from './EProcessState';
+import { BlocoMemoria } from './BlocoMemoria';
 
 export class Processo {
     public PID: number;
@@ -9,6 +10,8 @@ export class Processo {
     public EState: EProcessState;
     public Quantum: number;
     public QuantidadeBytes: number;
+    // NP2
+    public BlocosMemoria: BlocoMemoria[] = []; 
     
     constructor() { }
 }
