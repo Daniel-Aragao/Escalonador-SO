@@ -7,6 +7,6 @@
     <!--<esc-quick-fit (ViewModelEmitter)="OnMemoryAlocated($event)"></esc-best-fit>-->
   </div>
   <div *ngSwitchCase="3">
-    <esc-best-fit (ViewModelEmitter)="OnMemoryAlocated($event)"></esc-best-fit>
+    <esc-best-fit (ViewModelEmitter)="OnMemoryAlocated($event)" [MemoryViewModel]="MemoryViewModel"></esc-best-fit>
   </div>
 </div>

@@ -66,8 +66,8 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
       if (this.IsCoreLivre(core)) {
         this.CoreSenderService.OnCoreLivre(index);
       }
-      else {
-        core.Processo.TRestante--;
+      else if(core.Processo) {
+        core.Processo.TRestante--; // erro undefined Processo causado pela nova regra do "IsCoreLivre"
 
         if (core.Processo.Quantum != undefined)
           core.Processo.Quantum--;

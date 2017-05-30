@@ -29,7 +29,6 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("init")
   }
 
   public onChangeAlgoritmo(valor: number) {
