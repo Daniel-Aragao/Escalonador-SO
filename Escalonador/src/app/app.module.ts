@@ -26,6 +26,9 @@ import { CoreSenderService } from './services/core-sender.service';
 import { KillProcessService } from './services/kill-process.service';
 import { AlocarMemoriaService } from './services/alocar-memoria.service';
 import { RespostaMemoriaService } from './services/resposta-memoria.service';
+import { BestFitComponent } from './NP2/gerenciador-memoria/algoritmos/best-fit/best-fit.component';
+import { MergeFitComponent } from './NP2/gerenciador-memoria/algoritmos/merge-fit/merge-fit.component';
+import { QuickFitComponent } from './NP2/gerenciador-memoria/algoritmos/quick-fit/quick-fit.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,10 @@ import { RespostaMemoriaService } from './services/resposta-memoria.service';
     ProcessoQueueItemComponent,
     ConcluidosComponent,
     MemoryMenuComponent,
-    GerenciadorMemoriaComponent
+    GerenciadorMemoriaComponent,
+    BestFitComponent,
+    MergeFitComponent,
+    QuickFitComponent
   ],
   imports: [
     BrowserModule,

@@ -34,6 +34,10 @@ export class GerenciadorMemoriaComponent implements OnInit {
 
   HandleNewProcess(a: AlocarMemoriaViewModel): void{
 
+  }
+
+  OnMemoryAlocated(a: AlocarMemoriaViewModel):void{
+
     this.RespostaMemoriaService.OnRespostaAlocacaoMemoria(a);
   }
   
