@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { AlocarMemoriaService } from '../../services/alocar-memoria.service';
-import { RespostaMemoriaService } from '../../services/resposta-memoria.service';
 import { AlocarMemoriaViewModel } from '../../models/AlocarMemoriaViewModel';
+import { RespostaMemoriaService } from '../../services/resposta-memoria.service';
 
 import { ProcessoViewModel } from '../../models/ProcessoViewModel';
+import { MemoryMenuViewModel } from '../../models/MemoryMenuViewModel';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -12,32 +13,25 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './gerenciador-memoria.component.html',
   styleUrls: ['./gerenciador-memoria.component.css']
 })
-export class GerenciadorMemoriaComponent implements OnInit {
-
-  private AlocarMemoriaSubscription: Subscription;
-
+// essa classe será somente um controller pros algoritmos que serão escolhidos e passados via input
+export class GerenciadorMemoriaComponent implements OnInit, OnDestroy {
   private memoria = null;
 
-  constructor(private AlocarMemoriaService: AlocarMemoriaService,
-              private RespostaMemoriaService: RespostaMemoriaService) {
-    this.HandleNewProcess = this.HandleNewProcess.bind(this);
+  @Input() MemoryViewModel: MemoryMenuViewModel;
+
+  constructor(private RespostaMemoriaService: RespostaMemoriaService) {
+    
    }
 
   ngOnInit() {
-    this.AlocarMemoriaSubscription = this.AlocarMemoriaService.handleNewProcess.subscribe(
-      (a: AlocarMemoriaViewModel) => this.HandleNewProcess(a)
-    );
-
-    //this.processSenderSubscription = this.ProcessSenderService.handleNewProcess.subscribe(
-      // (p: ProcessoViewModel) => this.HandleNewProcess(p));
+    
   }
 
-  HandleNewProcess(a: AlocarMemoriaViewModel): void{
+  ngOnDestroy(){
 
-  }
+  }  
 
   OnMemoryAlocated(a: AlocarMemoriaViewModel):void{
-
     this.RespostaMemoriaService.OnRespostaAlocacaoMemoria(a);
   }
   

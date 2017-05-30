@@ -8,6 +8,7 @@ import { Processo } from '../../models/Processo';
 import { ProcessoViewModel } from '../../models/ProcessoViewModel';
 import { ProcessoQueue } from "../../models/ProcessoQueue";
 import { AlocarMemoriaViewModel } from "../../models/AlocarMemoriaViewModel";
+import { MemoryMenuViewModel } from "../../models/MemoryMenuViewModel";
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -25,6 +26,8 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
   private coreSenderSubscription: Subscription;
   private memoryResponseSubscription: Subscription;
   private cursorQueue: number = 0;
+
+  @Input() algoritmo: MemoryMenuViewModel;
 
   constructor(private ProcessSenderService: ProcessSenderService,
     private CoreSenderService: CoreSenderService,
