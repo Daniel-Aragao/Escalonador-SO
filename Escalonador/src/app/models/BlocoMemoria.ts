@@ -3,5 +3,5 @@ export class BlocoMemoria{
     public tamanho: number;
     public tamanhoUsado: number;
     public posicao: number;
-    public NextBloco: number;
+    public NextBloco: BlocoMemoria;
 }
