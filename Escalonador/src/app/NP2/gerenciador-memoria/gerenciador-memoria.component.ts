@@ -6,6 +6,8 @@ import { KillProcessService } from '../../services/kill-process.service';
 
 import { ProcessoViewModel } from '../../models/ProcessoViewModel';
 import { MemoryMenuViewModel } from '../../models/MemoryMenuViewModel';
+import { EAutopsia } from '../../models/EAutopsia';
+import { ELocalMorte } from '../../models/ELocalMorte';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -38,7 +40,7 @@ export class GerenciadorMemoriaComponent implements OnInit, OnDestroy {
       this.RespostaMemoriaService.OnRespostaAlocacaoMemoria(a);
     }else{
       // matar processo
-      this.KillProcessService.OnKillProcess(a.ProcessoViewModel, false);
+      this.KillProcessService.OnKillProcess(a.ProcessoViewModel, false, EAutopsia.OutOfMemory, ELocalMorte.GerenciadorMemoria);
     }
   }
   

@@ -5,7 +5,10 @@ import { ProcessSenderService } from '../services/process-sender.service';
 import { KillProcessService } from '../services/kill-process.service';
 
 import { ProcessoViewModel } from '../models/ProcessoViewModel';
+import { KillProcessViewModel } from '../models/KillProcessViewModel';
 import { CoreViewModel } from "../models/CoreViewModel";
+import { EAutopsia } from '../models/EAutopsia';
+import { ELocalMorte } from '../models/ELocalMorte';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -19,7 +22,8 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
   @Input() private running: boolean;
   @Input() private quantidadeCores: number;
   @Input() private showDeadline: boolean;
-  private subscription: Subscription;
+  private SendToCoreSubscription: Subscription;
+  private KillProcessSubscription: Subscription;
   private cores: ProcessoViewModel[] = [];
   private pause:boolean = false;
 
@@ -38,9 +42,11 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
       this.cores[i] = new ProcessoViewModel();
     }
     
-    this.subscription = this.ProcessSenderToCoreService.handleProcessoEscalonado.subscribe(
+    this.SendToCoreSubscription = this.ProcessSenderToCoreService.handleProcessoEscalonado.subscribe(
       (p: ProcessoViewModel) => this.HandleProcessoEscalonado(p));
 
+    this.KillProcessSubscription = this.KillProcessService.handleKilledProcess.subscribe(
+      (kp: KillProcessViewModel) => this.HandleKilledProcess(kp));
 
     this.Loop();
   }
@@ -75,7 +81,7 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
         if (this.IsProcessoOver(core)) {
           this.cores[index] = new ProcessoViewModel();
           this.cores[index].isFake = true;
-          this.KillProcessService.OnKillProcess(core, true);
+          this.KillProcessService.OnKillProcess(core, true, EAutopsia.Done, ELocalMorte.Core);
 
           setTimeout(() => this.CoreSenderService.OnCoreLivre(index), 100);
         } else if (this.IsQuantumOver(core)) {
@@ -107,8 +113,15 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.SendToCoreSubscription.unsubscribe();
+    this.KillProcessSubscription.unsubscribe();
     this.cores = [];
+  }
+
+  private HandleKilledProcess(kp : KillProcessViewModel){
+    if(!kp.Finished && kp.Autopsia == EAutopsia.OutOfMemory){
+      setTimeout(() => this.CoreSenderService.OnCoreLivre(kp.ProcessoViewModel.coreIndex), 100);
+    }
   }
 
 }
