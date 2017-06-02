@@ -1,3 +1,8 @@
-<p>
-  bloco-memoria works!
-</p>
+<span *ngIf="Bloco">
+  <li [ngStyle]="{'background': 'linear-gradient(to right, #4298f4 ' + Bloco.getPercentOcupado() + '%, #fff '+ Bloco.getPercentNaoOcupado() + '%)'}">{{Bloco.BID}}</li>
+  <esc-bloco-memoria [Bloco]="Bloco.NextBloco"></esc-bloco-memoria>
+</span>
+<span *ngIf="BlocosLivres">
+  <li>{{BlocosLivres.value.BID}}</li>
+  <esc-bloco-memoria [BlocosLivres]="BlocosLivres.nextNode"></esc-bloco-memoria>
+</span>

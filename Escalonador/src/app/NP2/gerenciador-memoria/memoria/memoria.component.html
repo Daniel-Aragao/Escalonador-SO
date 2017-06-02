@@ -1,3 +1,15 @@
-<p>
-  memoria works!
-</p>
+<div class="panel panel-warning">
+  <div class="panel-heading">Todos os blocos</div>
+  <div class="panel-body">
+    <ul>
+      <esc-bloco-memoria [Bloco]="TodosOsBlocos"></esc-bloco-memoria>
+    </ul>
+  </div>
+</div>
+<div class="panel panel-success" *ngFor="let lista of ListasBlocosLivres">
+  <div class="panel-body">
+    <ul>
+      <esc-bloco-memoria [BlocosLivres]="lista"></esc-bloco-memoria>
+    </ul>
+  </div>
+</div>

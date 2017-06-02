@@ -48,10 +48,6 @@ export class ProcessFactoryService {
     this.contagem++;
 
     return processo;
-  }  
-
-  public QuantidadeBytes(){
-    return RandomNumber(32, 1025);
   }
 
 }
