@@ -12,7 +12,7 @@ export class AlocarMemoriaService {
   public handleNewProcess: Observable<AlocarMemoriaViewModel> = this.requisicaoAlocacaoMemoriaSource.asObservable();
 
   public OnRequisicaoAlocacaoMemoria(ProcessoViewModel: ProcessoViewModel) {
-    let requisicao = new AlocarMemoriaViewModel(ProcessoViewModel);
+    let requisicao = new AlocarMemoriaViewModel(ProcessoViewModel.Processo.QuantidadeBytes(), ProcessoViewModel);
     
     this.requisicaoAlocacaoMemoriaSource.next(requisicao);
   }

@@ -20,26 +20,26 @@ export class BestFitComponent implements OnInit, OnDestroy {
 
   
   private MemoriaTotal: number;// Capacidade total da memória
-  private MemoriaOcupada: number; // Soma do valor ocupado dos blocos
-  private MemoriaOcupadaPorBlocos: number;// Soma do tamanho dos blocos criados
+  private MemoriaOcupada: number = 0; // Soma do valor ocupado dos blocos
+  private MemoriaOcupadaPorBlocos: number = 0;// Soma do tamanho dos blocos criados
   private NextBlocoId: number = 1; // Contador de ID's
 
-  TodosOsBlocos: BlocoMemoria;/* tem que ter essa lista de ocupados? */
+  TodosOsBlocos: BlocoMemoria;// Raiz da lista encadeada de blocos
   UltimoBloco: BlocoMemoria; // Evitar ficar buscando o último bloco da lista
 
-  BlocosLivres: BlockNode; /* qual será o objeto da memoria? (isso seria tipo uma lista de bloco de memoria)*/
-  UltimoBlocoLivre: BlockNode; // Evitar ficar buscando o último bloco da lista
+  BlocosLivres: BlockNode; // Raiz da lista encadeada de nó de bloco(a referência da lista "TodosOsBlocos" não deve ser alterada)
 
   constructor(private AlocarMemoriaService: AlocarMemoriaService) {
     this.HandleRequisicao = this.HandleRequisicao.bind(this);
   }
 
   ngOnInit() {
+    this.MemoriaTotal = this.MemoryViewModel.size;
+    
     this.AlocarMemoriaSubscription = this.AlocarMemoriaService.handleNewProcess.subscribe(
       (a: AlocarMemoriaViewModel) => this.HandleRequisicao(a)
     );
 
-    this.MemoriaTotal = this.MemoryViewModel.size;
   }
 
   ngOnDestroy() {
@@ -53,14 +53,33 @@ export class BestFitComponent implements OnInit, OnDestroy {
 
   HandleRequisicao(a: AlocarMemoriaViewModel): void {
     // código de gerenciar a memória
-    debugger;
+    // debugger;
 
     // Verificar se tenho memória em bytes
     if(this.hasMemory(a.getRequisicao())){
       // Verificar se tenho blocos livres
       if(this.BlocosLivres) {
-        // Caso tenha blocos livres
-        let blocoPerfeito: BlocoMemoria = this. ReceberMelhorEncaixe(this.TodosOsBlocos, a.getRequisicao());
+        // Caso tenha blocos livres procuro se encaixo em algum
+        let blocoPerfeito: BlockNode = this. ReceberMelhorEncaixe(this.BlocosLivres, a.getRequisicao());
+        if(blocoPerfeito){
+          // achado o bloco perfeito setar valores
+          let bloco = blocoPerfeito.value;
+          bloco.tamanhoUsado = a.getRequisicao();
+          this.MemoriaOcupada += bloco.tamanhoUsado;
+
+          // Adiciona no processo um novo bloco
+          a.ProcessoViewModel.Processo.BlocosMemoria.push(bloco);
+
+          // Confirma a alocação de memória
+          a.Alocado = true;
+        }else{
+          // Caso não caiba em nenhum
+          // Verificar se tenho espaço para criar um bloco do tamanho da requisição
+          if(this.hasSpaceForNewBlock(a.getRequisicao())){
+            // Caso tenha cria bloco novo
+            this.CriarBloco(a);
+          }
+        }
       }else{
         // Caso não tenha blocos livres
         // verificar se tenho espaço para criar um bloco do tamanho da requisição
@@ -73,14 +92,43 @@ export class BestFitComponent implements OnInit, OnDestroy {
     this.ViewModelEmitter.emit(a);
   }
 
-   ReceberMelhorEncaixe(bloco: BlocoMemoria, tamanhoRequisicao: number): BlocoMemoria {
-    if (bloco.tamanho === tamanhoRequisicao)
+   ReceberMelhorEncaixe(bloco: BlockNode, tamanhoRequisicao: number): BlockNode {
+    if (bloco.value.getTamanho() === tamanhoRequisicao)
       return bloco;
+    
+    let MelhorEncaixe:BlockNode = bloco;
+    let AnteriorEncaixe: BlockNode;
 
-    if (bloco.NextBloco)
-      return this. ReceberMelhorEncaixe(bloco.NextBloco, tamanhoRequisicao)
-    else
-      return bloco;
+    while(bloco.nextNode){
+      let next = bloco.nextNode;
+
+      if(MelhorEncaixe.value.getTamanho() < tamanhoRequisicao || (MelhorEncaixe.value.getTamanho() > next.value.getTamanho())){
+        if(next.value.getTamanho() > tamanhoRequisicao){
+          MelhorEncaixe = next;
+          AnteriorEncaixe = bloco;
+        }else if(next.value.getTamanho() == tamanhoRequisicao){
+          MelhorEncaixe = next;
+          AnteriorEncaixe = bloco;
+          break;
+        }
+      }
+
+      bloco = bloco.nextNode;
+    }
+
+    if(MelhorEncaixe.value.getTamanho() < tamanhoRequisicao){
+      return null;
+    }
+
+    if(AnteriorEncaixe){
+      AnteriorEncaixe.nextNode = MelhorEncaixe.nextNode;
+    }else{
+      this.BlocosLivres = MelhorEncaixe.nextNode;
+    }
+
+    MelhorEncaixe.nextNode = null;
+
+    return MelhorEncaixe;
   }
 
   private hasMemory(requisicao){
@@ -92,18 +140,19 @@ export class BestFitComponent implements OnInit, OnDestroy {
   }
   
   private CriarBloco(a: AlocarMemoriaViewModel){
-    let novoBloco = new BlocoMemoria();
+    let novoBloco = new BlocoMemoria(a.getRequisicao());
     novoBloco.BID = this.NextBlocoId++;
     novoBloco.NextBloco = null;
-    novoBloco.tamanho = a.getRequisicao();
-    novoBloco.tamanhoUsado = novoBloco.tamanho;
+    novoBloco.tamanhoUsado = novoBloco.getTamanho();
 
-    this.MemoriaOcupada += novoBloco.tamanho;
-    this.MemoriaOcupadaPorBlocos += novoBloco.tamanho;
+    this.MemoriaOcupada += novoBloco.getTamanho();
+    this.MemoriaOcupadaPorBlocos += novoBloco.getTamanho();
 
     // Verifica se existe um último bloco (esse pode ser o primeiro)
     if(this.UltimoBloco){
       this.UltimoBloco.NextBloco = novoBloco;
+    }else{
+      this.TodosOsBlocos = novoBloco;
     }
     this.UltimoBloco = novoBloco;
 

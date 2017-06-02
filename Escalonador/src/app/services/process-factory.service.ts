@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Processo } from "../models/Processo";
 import { ProcessoViewModel } from "../models/ProcessoViewModel";
 import { EProcessState } from '../models/EProcessState';
+import { RandomNumber } from './RandomNumber';
 
 
 
@@ -35,26 +36,22 @@ export class ProcessFactoryService {
     var processo = new Processo();
     processo.PID = this.contagem;
 
-    processo.TDuracao = this.RandomNumber(10, 31);
+    processo.TDuracao = RandomNumber(10, 31);
     processo.TRestante = processo.TDuracao;
-    processo.TDeadline = this.RandomNumber(4, 21);
-    processo.QuantidadeBytes = this.QuantidadeBytes();
+    processo.TDeadline = RandomNumber(4, 21);
+    // processo.QuantidadeBytes = this.QuantidadeBytes();
 
-    processo.Prioridade = this.RandomNumber(0, 4);
+    processo.Prioridade = RandomNumber(0, 4);
 
     processo.EState = EProcessState.esperando;
 
     this.contagem++;
 
     return processo;
-  }
-
-  public RandomNumber(start, end): number {
-    return Math.floor(Math.random() * end) + start;
-  }
+  }  
 
   public QuantidadeBytes(){
-    return this.RandomNumber(32, 1025);
+    return RandomNumber(32, 1025);
   }
 
 }

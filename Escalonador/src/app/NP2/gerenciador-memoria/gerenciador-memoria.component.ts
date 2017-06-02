@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { AlocarMemoriaService } from '../../services/alocar-memoria.service';
 import { AlocarMemoriaViewModel } from '../../models/AlocarMemoriaViewModel';
 import { RespostaMemoriaService } from '../../services/resposta-memoria.service';
+import { KillProcessService } from '../../services/kill-process.service';
 
 import { ProcessoViewModel } from '../../models/ProcessoViewModel';
 import { MemoryMenuViewModel } from '../../models/MemoryMenuViewModel';
@@ -19,7 +20,8 @@ export class GerenciadorMemoriaComponent implements OnInit, OnDestroy {
 
   @Input() MemoryViewModel: MemoryMenuViewModel;
 
-  constructor(private RespostaMemoriaService: RespostaMemoriaService) {
+  constructor(private RespostaMemoriaService: RespostaMemoriaService,
+              private KillProcessService: KillProcessService) {
     
    }
 
@@ -36,6 +38,7 @@ export class GerenciadorMemoriaComponent implements OnInit, OnDestroy {
       this.RespostaMemoriaService.OnRespostaAlocacaoMemoria(a);
     }else{
       // matar processo
+      this.KillProcessService.OnKillProcess(a.ProcessoViewModel, false);
     }
   }
   
