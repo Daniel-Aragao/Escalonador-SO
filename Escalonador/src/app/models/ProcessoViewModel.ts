@@ -1,4 +1,5 @@
 import { Processo } from "./Processo";
+import { BlocoMemoria } from "./BlocoMemoria";
 
 export class ProcessoViewModel{
     public Processo: Processo;

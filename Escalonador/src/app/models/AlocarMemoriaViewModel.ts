@@ -2,13 +2,14 @@ import { ProcessoViewModel } from "../models/ProcessoViewModel"
 
 export class AlocarMemoriaViewModel {
     public ProcessoViewModel: ProcessoViewModel;
+    public Alocado: boolean = false;
 
-    constructor(p: ProcessoViewModel) {
+    constructor(private requisicao: number, p: ProcessoViewModel) {
         this.ProcessoViewModel = p;
     }
 
-    public getTamanho(): number{
-        return this.ProcessoViewModel.Processo.QuantidadeBytes;
+    public getRequisicao(): number{
+        return this.requisicao;
     }
 
     public getPID(): number{

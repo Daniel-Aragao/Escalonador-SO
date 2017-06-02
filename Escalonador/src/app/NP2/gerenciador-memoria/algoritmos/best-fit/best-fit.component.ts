@@ -3,6 +3,7 @@ import { AlocarMemoriaService } from '../../../../services/alocar-memoria.servic
 import { AlocarMemoriaViewModel } from '../../../../models/AlocarMemoriaViewModel';
 import { MemoryMenuViewModel } from '../../../../models/MemoryMenuViewModel';
 import { BlocoMemoria } from '../../../../models/BlocoMemoria';
+import { BlockNode } from '../../../../models/BlockNode';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -14,24 +15,31 @@ import { Subscription } from 'rxjs/Subscription';
 export class BestFitComponent implements OnInit, OnDestroy {
   private AlocarMemoriaSubscription: Subscription;
 
-  @Output("ViewModelEmitter") ViewModelEmitter = new EventEmitter();
-  @Input() MemoryViewModel: MemoryMenuViewModel;
+  @Output("ViewModelEmitter") ViewModelEmitter = new EventEmitter(); // joga a decisão no gerenciador-memoria.component
+  @Input() MemoryViewModel: MemoryMenuViewModel; // Input só me serve no ngOnInit, depois descartar uso
 
-  MemoriasOcupadas: BlocoMemoria;/* tem que ter essa lista de ocupados? */
-  MemoriasLivres: BlocoMemoria; /* qual será o objeto da memoria? (isso seria tipo uma lista de bloco de memoria)*/
+  
+  private MemoriaTotal: number;// Capacidade total da memória
+  private MemoriaOcupada: number; // Soma do valor ocupado dos blocos
+  private MemoriaOcupadaPorBlocos: number;// Soma do tamanho dos blocos criados
+  private NextBlocoId: number = 1; // Contador de ID's
+
+  TodosOsBlocos: BlocoMemoria;/* tem que ter essa lista de ocupados? */
+  UltimoBloco: BlocoMemoria; // Evitar ficar buscando o último bloco da lista
+
+  BlocosLivres: BlockNode; /* qual será o objeto da memoria? (isso seria tipo uma lista de bloco de memoria)*/
+  UltimoBlocoLivre: BlockNode; // Evitar ficar buscando o último bloco da lista
 
   constructor(private AlocarMemoriaService: AlocarMemoriaService) {
-    this.HandleNewProcess = this.HandleNewProcess.bind(this);
-    console.log('ctor');
-    console.log(this.MemoryViewModel) // vai gerar undefined, ctor não recebeu o input ainda
+    this.HandleRequisicao = this.HandleRequisicao.bind(this);
   }
 
   ngOnInit() {
     this.AlocarMemoriaSubscription = this.AlocarMemoriaService.handleNewProcess.subscribe(
-      (a: AlocarMemoriaViewModel) => this.HandleNewProcess(a)
+      (a: AlocarMemoriaViewModel) => this.HandleRequisicao(a)
     );
-    console.log('init');
-    console.log(this.MemoryViewModel) // já recebeu o input
+
+    this.MemoriaTotal = this.MemoryViewModel.size;
   }
 
   ngOnDestroy() {
@@ -42,28 +50,67 @@ export class BestFitComponent implements OnInit, OnDestroy {
    * Best fit: Varre a lista de memória livre buscando o bloco igual ou o bloco com menor desperdicio de memória
    * @param a  
    */
-  HandleNewProcess(a: AlocarMemoriaViewModel): void {
 
+  HandleRequisicao(a: AlocarMemoriaViewModel): void {
     // código de gerenciar a memória
     debugger;
 
-    let blocoMemoriaLivre: BlocoMemoria = null;
-
-    if (this.MemoriasLivres) {
-      let blocoPerfeito: BlocoMemoria = this.ReceberBlocoPerfeito(this.MemoriasOcupadas, a.getTamanho());
-
+    // Verificar se tenho memória em bytes
+    if(this.hasMemory(a.getRequisicao())){
+      // Verificar se tenho blocos livres
+      if(this.BlocosLivres) {
+        // Caso tenha blocos livres
+        let blocoPerfeito: BlocoMemoria = this. ReceberMelhorEncaixe(this.TodosOsBlocos, a.getRequisicao());
+      }else{
+        // Caso não tenha blocos livres
+        // verificar se tenho espaço para criar um bloco do tamanho da requisição
+        if(this.hasSpaceForNewBlock(a.getRequisicao())){
+          // Caso tenha cria bloco novo
+          this.CriarBloco(a);
+        }
+      }
     }
     this.ViewModelEmitter.emit(a);
   }
 
-  ReceberBlocoPerfeito(bloco: BlocoMemoria, tamanhoRequisicao: number): BlocoMemoria {
+   ReceberMelhorEncaixe(bloco: BlocoMemoria, tamanhoRequisicao: number): BlocoMemoria {
     if (bloco.tamanho === tamanhoRequisicao)
       return bloco;
 
     if (bloco.NextBloco)
-      return this.ReceberBlocoPerfeito(bloco.NextBloco, tamanhoRequisicao)
+      return this. ReceberMelhorEncaixe(bloco.NextBloco, tamanhoRequisicao)
     else
       return bloco;
   }
 
+  private hasMemory(requisicao){
+    return this.MemoriaTotal > (this.MemoriaOcupada + requisicao);
+  }
+
+  private hasSpaceForNewBlock(requisicao){
+    return this.MemoriaTotal > (this.MemoriaOcupadaPorBlocos + requisicao);
+  }
+  
+  private CriarBloco(a: AlocarMemoriaViewModel){
+    let novoBloco = new BlocoMemoria();
+    novoBloco.BID = this.NextBlocoId++;
+    novoBloco.NextBloco = null;
+    novoBloco.tamanho = a.getRequisicao();
+    novoBloco.tamanhoUsado = novoBloco.tamanho;
+
+    this.MemoriaOcupada += novoBloco.tamanho;
+    this.MemoriaOcupadaPorBlocos += novoBloco.tamanho;
+
+    // Verifica se existe um último bloco (esse pode ser o primeiro)
+    if(this.UltimoBloco){
+      this.UltimoBloco.NextBloco = novoBloco;
+    }
+    this.UltimoBloco = novoBloco;
+
+    // Adiciona no processo um novo bloco
+    a.ProcessoViewModel.Processo.BlocosMemoria.push(novoBloco);
+
+    // Confirma a alocação de memória
+    a.Alocado = true;
+  }
 }

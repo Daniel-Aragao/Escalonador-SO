@@ -32,7 +32,11 @@ export class GerenciadorMemoriaComponent implements OnInit, OnDestroy {
   }  
 
   OnMemoryAlocated(a: AlocarMemoriaViewModel):void{
-    this.RespostaMemoriaService.OnRespostaAlocacaoMemoria(a);
+    if(a.Alocado){
+      this.RespostaMemoriaService.OnRespostaAlocacaoMemoria(a);
+    }else{
+      // matar processo
+    }
   }
   
 

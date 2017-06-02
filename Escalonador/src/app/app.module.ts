@@ -29,6 +29,8 @@ import { RespostaMemoriaService } from './services/resposta-memoria.service';
 import { BestFitComponent } from './NP2/gerenciador-memoria/algoritmos/best-fit/best-fit.component';
 import { MergeFitComponent } from './NP2/gerenciador-memoria/algoritmos/merge-fit/merge-fit.component';
 import { QuickFitComponent } from './NP2/gerenciador-memoria/algoritmos/quick-fit/quick-fit.component';
+import { MemoriaComponent } from './NP2/gerenciador-memoria/memoria/memoria.component';
+import { BlocoMemoriaComponent } from './NP2/gerenciador-memoria/bloco-memoria/bloco-memoria.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { QuickFitComponent } from './NP2/gerenciador-memoria/algoritmos/quick-fi
     GerenciadorMemoriaComponent,
     BestFitComponent,
     MergeFitComponent,
-    QuickFitComponent
+    QuickFitComponent,
+    MemoriaComponent,
+    BlocoMemoriaComponent
   ],
   imports: [
     BrowserModule,
