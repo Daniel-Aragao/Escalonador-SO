@@ -24,7 +24,7 @@ export class KillProcessService {
     kpvm.Autopsia = Autopsia;
     kpvm.LocalDeMorte = LocalDeMorte;
     kpvm.ProcessoViewModel = pvm;
-
+    kpvm.Finished = Finished;
 
     this.addProcessSource.next(kpvm);
   }

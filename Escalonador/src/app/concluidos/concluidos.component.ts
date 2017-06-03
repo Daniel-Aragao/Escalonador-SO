@@ -37,6 +37,7 @@ export class ConcluidosComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
     this.Finished = [];
     this.Unfinished = [];
+    this.subscription.unsubscribe();
   }
 
 
