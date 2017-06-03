@@ -91,7 +91,11 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
       return;
     }
     processo.coreIndex = coreIndex;
-    this.AlocarMemoriaService.OnRequisicaoAlocacaoMemoria(processo)
+    if(!processo.Processo.BlocosMemoria.length){
+      this.AlocarMemoriaService.OnRequisicaoAlocacaoMemoria(processo)
+    }else{
+      this.ProcessSenderToCoreService.OnNewProcessoEscalonado(processo.Processo, processo.coreIndex, processo.color);      
+    }
   }
 
   private HandleMemoryResponse(value: AlocarMemoriaViewModel):void{

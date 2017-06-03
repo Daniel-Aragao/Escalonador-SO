@@ -6,6 +6,8 @@ export class BlocoMemoria{
     
     constructor(tamanho: number) {
         this.tamanho = tamanho;
+        this.tamanhoUsado = 0;
+        this.BID = 0;
     }
     public getTamanho(){
         return this.tamanho;

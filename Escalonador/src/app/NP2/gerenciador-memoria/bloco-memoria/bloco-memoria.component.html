@@ -3,6 +3,6 @@
   <esc-bloco-memoria [Bloco]="Bloco.NextBloco"></esc-bloco-memoria>
 </span>
 <span *ngIf="BlocosLivres">
-  <li *ngIf="BlocosLivres.value">{{BlocosLivres.value.BID}}</li>
+  <li>{{BlocosLivres.value.BID}}</li>
   <esc-bloco-memoria [BlocosLivres]="BlocosLivres.nextNode"></esc-bloco-memoria>
 </span>

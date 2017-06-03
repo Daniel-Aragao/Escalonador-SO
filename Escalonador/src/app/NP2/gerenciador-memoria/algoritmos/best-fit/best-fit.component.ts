@@ -50,40 +50,24 @@ export class BestFitComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.AlocarMemoriaSubscription.unsubscribe();
-    //this.ProcessKilledSubscriptio.unsubscribe();
+    this.ProcessKilledSubscriptio.unsubscribe();
   }
 
   HandleKilledProcess(kp: KillProcessViewModel) {
-    debugger;
-
-    if (kp.Finished) {
-      this.MoverParaLivre(kp.ProcessoViewModel.Processo.BlocosMemoria);
-
-    } else {
-      //this.Unfinished.push(kp.ProcessoViewModel);
-    }
+    this.MoverParaLivre(kp.ProcessoViewModel.Processo.BlocosMemoria);
   }
 
-  MoverParaLivre(blocos: BlocoMemoria[]): void {
-
-    if (!this.BlocosLivres)
-      this.BlocosLivres = new BlockNode();
-
-    let ultimoBlocoLivre: BlockNode = this.BlocosLivres;
-
-    while (ultimoBlocoLivre.nextNode) {
-      ultimoBlocoLivre = ultimoBlocoLivre.nextNode;
-    }
+  MoverParaLivre(blocos: BlocoMemoria[]): void {    
 
     blocos.forEach(bloco => {
       let blockNode = new BlockNode();
       blockNode.value = bloco;
 
-      ultimoBlocoLivre.nextNode = blockNode;
-      ultimoBlocoLivre = ultimoBlocoLivre.nextNode;
+      blockNode.nextNode = this.BlocosLivres;
+      this.BlocosLivres = blockNode;
 
+      bloco.tamanhoUsado = 0;
     });
-    console.log(this.BlocosLivres);
   }
 
   HandleRequisicao(a: AlocarMemoriaViewModel): void {
@@ -94,7 +78,7 @@ export class BestFitComponent implements OnInit, OnDestroy {
       // Verificar se tenho blocos livres
       if (this.BlocosLivres) {
         // Caso tenha blocos livres procuro se encaixo em algum
-        let blocoPerfeito: BlockNode = this.ReceberMelhorEncaixe(this.BlocosLivres.nextNode, a.getRequisicao());
+        let blocoPerfeito: BlockNode = this.ReceberMelhorEncaixe(this.BlocosLivres, a.getRequisicao());
         if (blocoPerfeito) {
           // achado o bloco perfeito setar valores
           let bloco = blocoPerfeito.value;
