@@ -55,7 +55,7 @@ export class BestFitComponent implements OnInit, OnDestroy {
 
   HandleKilledProcess(kp: KillProcessViewModel) {
     debugger;
-    
+
     if (kp.Finished) {
       this.MoverParaLivre(kp.ProcessoViewModel.Processo.BlocosMemoria);
 
@@ -65,7 +65,7 @@ export class BestFitComponent implements OnInit, OnDestroy {
   }
 
   MoverParaLivre(blocos: BlocoMemoria[]): void {
-    
+
     if (!this.BlocosLivres)
       this.BlocosLivres = new BlockNode();
 
@@ -76,27 +76,14 @@ export class BestFitComponent implements OnInit, OnDestroy {
     }
 
     blocos.forEach(bloco => {
-      let blockNode = new BlockNode ();
+      let blockNode = new BlockNode();
       blockNode.value = bloco;
 
       ultimoBlocoLivre.nextNode = blockNode;
       ultimoBlocoLivre = ultimoBlocoLivre.nextNode;
-      
+
     });
     console.log(this.BlocosLivres);
-  }
-
-  ReceberBloco(id: number, blocos: BlocoMemoria[]): BlocoMemoria {
-    let blocoSelecionado: BlocoMemoria = null;
-
-    blocos.forEach(bloco => {
-      if (id === bloco.BID) {
-        blocoSelecionado = bloco;
-        return;
-      }
-    });
-
-    return blocoSelecionado;
   }
 
   HandleRequisicao(a: AlocarMemoriaViewModel): void {
@@ -136,6 +123,7 @@ export class BestFitComponent implements OnInit, OnDestroy {
         }
       }
     }
+
     this.ViewModelEmitter.emit(a);
   }
 
