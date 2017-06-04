@@ -49,29 +49,29 @@ export class MergeFitComponent implements OnInit {
 
   HandleKilledProcess(kp: KillProcessViewModel) {
     this.MoverParaLivre(kp.ProcessoViewModel.Processo.BlocosMemoria);
-    this.MergeBlocos();
+    //this.MergeBlocos();
   }
 
   MoverParaLivre(blocos: BlocoMemoria[]): void {
     //debugger;
     blocos.forEach(bloco => {
-      if (this.Exist(bloco)) {
-        let blockNode = new BlockNode();
-        blockNode.value = bloco;
+      //if (this.Exist(bloco)) {
+      let blockNode = new BlockNode();
+      blockNode.value = bloco;
 
-        blockNode.nextNode = this.BlocosLivres;
-        this.BlocosLivres = blockNode;
+      blockNode.nextNode = this.BlocosLivres;
+      this.BlocosLivres = blockNode;
 
-        this.MemoryVM.MemoriaOcupada -= bloco.tamanhoUsado;
-        bloco.tamanhoUsado = 0;
-      }
+      this.MemoryVM.MemoriaOcupada -= bloco.tamanhoUsado;
+      bloco.tamanhoUsado = 0;
+      //}
     });
   }
 
   private Exist(bloco: BlocoMemoria): boolean {
     let finded = this.TodosOsBlocos;
 
-    while (finded.BID != bloco.BID) {
+    while (finded && finded.BID != bloco.BID) {
       finded = finded.NextBloco;
     }
 
@@ -80,31 +80,35 @@ export class MergeFitComponent implements OnInit {
 
   HandleRequisicao(requisicao: AlocarMemoriaViewModel): void {
 
-    if (this.hasMemory(requisicao.getRequisicao())) {
-      if (this.BlocosLivres) {
-        let blocoPerfeito: BlocoMemoria = this.ReceberEncaixe(requisicao.getRequisicao());
+    let blocoLivre: BlockNode = null;
 
-        if (blocoPerfeito) {
-          blocoPerfeito.tamanhoUsado = requisicao.getRequisicao();
-          this.MemoryVM.MemoriaOcupada += blocoPerfeito.tamanhoUsado;
+    if (this.hasMemory(requisicao.getRequisicao())) { // se tiver memoria
+      if (this.BlocosLivres) { // se tem blocos livres
 
-          requisicao.ProcessoViewModel.Processo.BlocosMemoria.push(blocoPerfeito.Clone());
-          requisicao.Alocado = true;
-          this.TirarDaLivre(blocoPerfeito);
+        debugger;
+        // Verificar bloco livre >==
+        blocoLivre = this.VerificarBlocoLivre(requisicao.getRequisicao()); // pega o primeiro bloco livre que caiba na requisição
+        if (!blocoLivre) {
+          // Não achou procurar algum bloco livre que tenha a possibilidade de fazer merge e que o tamanho total fique >==
+          blocoLivre = this.BlocoLivreMerged(requisicao.getRequisicao()); // pegar o primeiro bloco livre já "mergiado"
 
-        } else {
-          if (this.hasSpaceForNewBlock(requisicao.getRequisicao())) {
-            this.CriarBloco(requisicao);
+          if (!blocoLivre) {
+            if (this.hasSpaceForNewBlock(requisicao.getRequisicao())) {
+              this.CriarBloco(requisicao);
+            }
           }
         }
+        if (blocoLivre) {
+          if (blocoLivre.value.getTamanho() > requisicao.getRequisicao()) // verifica se tem que dar split
+            this.SplitBloco(blocoLivre.value, requisicao.getRequisicao());
 
-      } else {
-        if (this.hasSpaceForNewBlock(requisicao.getRequisicao())) {
-          this.CriarBloco(requisicao);
+          this.MemoryVM.MemoriaOcupada += blocoLivre.value.tamanhoUsado;
         }
+
+      } else if (this.hasSpaceForNewBlock(requisicao.getRequisicao())) {
+        this.CriarBloco(requisicao);
       }
     }
-
     this.ViewModelEmitter.emit(requisicao);
   }
 
@@ -112,87 +116,84 @@ export class MergeFitComponent implements OnInit {
     return this.MemoryVM.MemoriaTotal > (this.MemoryVM.MemoriaOcupadaPorBlocos + requisicao);
   }
 
-  private ReceberEncaixe(requisicao: number): BlocoMemoria {
-    let bloco: BlocoMemoria = this.TodosOsBlocos;
+  private VerificarBlocoLivre(requisicao: number): BlockNode {
+    let bloco: BlockNode = this.BlocosLivres;
 
     while (bloco) {
-      if (bloco.tamanhoUsado === 0) {
+      if (bloco.value.getTamanho() >= requisicao)
+        break;
 
-        if (bloco.getTamanho() === requisicao) {
-          break;
-        } else {
-          if (bloco.getTamanho() > requisicao) {
-            this.SplitBloco(bloco, requisicao);
-            break;
-          }
-        }
-      }
-      bloco = bloco.NextBloco;
+      bloco = bloco.nextNode;
     }
 
     return bloco;
   }
 
+  private BlocoLivreMerged(requisicao: number): BlockNode {
+    let bloco: BlockNode = this.BlocosLivres;
+
+    while (bloco) {
+      //debugger;
+
+      if (bloco.value.NextBloco && bloco.value.NextBloco.tamanhoUsado === 0 && bloco.value.getTamanho() + bloco.value.NextBloco.getTamanho() >= requisicao) {
+        this.MergeBlocos(bloco.value, bloco.value.NextBloco);
+        break;
+      }
+
+      bloco = bloco.nextNode;
+    }
+
+    return bloco;
+
+  }
+
   private SplitBloco(bloco: BlocoMemoria, requisicao: number): void {
+    debugger;
+
     let tamanhoNewBlock: number = bloco.getTamanho() - requisicao;
     let newBlock: BlocoMemoria = new BlocoMemoria(tamanhoNewBlock);
     newBlock.BID = this.MemoryVM.NextBlocoId++;
-    newBlock.tamanhoUsado = tamanhoNewBlock;
+    newBlock.tamanhoUsado = 0;
 
-    this.TirarDaLivre(bloco.NextBloco);
+    // Adicionando o novo bloco nos blocos livres.
+    let blockNode = new BlockNode();
+    blockNode.value = newBlock;
+
+    blockNode.nextNode = this.BlocosLivres;
+    this.BlocosLivres = blockNode;
 
     newBlock.NextBloco = bloco.NextBloco;
     bloco.NextBloco = newBlock;
     bloco.setTamanho(requisicao);
+
+    // bloco antigo sair da livre  
+    this.TirarDaLivre(bloco);
   }
 
-  private MergeBlocos() {
-    let bloco = this.TodosOsBlocos;
-
-    while (bloco.NextBloco) {
-      if (bloco.tamanhoUsado === 0 && bloco.NextBloco.tamanhoUsado === 0) {
-        //debugger;
-
-        let tamanhoTotalMerged = bloco.getTamanho() + bloco.NextBloco.getTamanho();
-        bloco.setTamanho(tamanhoTotalMerged);
-
-        this.TirarDaLivre(bloco.NextBloco);
-
-        if (bloco.NextBloco.NextBloco)
-          bloco.NextBloco = bloco.NextBloco.NextBloco;
-        else
-          bloco.NextBloco = null;
-      }
-      if (bloco.NextBloco)
-        bloco = bloco.NextBloco;
-    }
-
+  private MergeBlocos(first: BlocoMemoria, second: BlocoMemoria) {
+    first.NextBloco = second.NextBloco;
   }
 
   private TirarDaLivre(bloco: BlocoMemoria) {
-    setTimeout.bind(this)(() => {
-      let b = this.BlocosLivres;
+    let b = this.BlocosLivres;
 
-      if (b.value.BID === bloco.BID)
-        this.BlocosLivres = this.BlocosLivres.nextNode;
-      else {
+    if (b.value.BID === bloco.BID)
+      this.BlocosLivres = this.BlocosLivres.nextNode;
+    else {
 
-        //debugger;
-        while (b.nextNode && b.nextNode.value.BID != bloco.BID) {
-          b = b.nextNode;
-        }
-
-        if (b.nextNode.nextNode) {
-          b.nextNode = b.nextNode.nextNode;
-        }
-        else {
-          b.nextNode = null;
-        }
-
+      //debugger;
+      while (b.nextNode && b.nextNode.value.BID != bloco.BID) {
+        b = b.nextNode;
       }
 
-    }, 2);
+      if (b.nextNode.nextNode) {
+        b.nextNode = b.nextNode.nextNode;
+      }
+      else {
+        b.nextNode = null;
+      }
 
+    }
   }
 
   private CriarBloco(requisicao: AlocarMemoriaViewModel) {
