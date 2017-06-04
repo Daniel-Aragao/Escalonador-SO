@@ -85,7 +85,7 @@ export class MergeFitComponent implements OnInit {
     if (this.hasMemory(requisicao.getRequisicao())) { // se tiver memoria
       if (this.BlocosLivres) { // se tem blocos livres
 
-        debugger;
+        // debugger;
         // Verificar bloco livre >==
         blocoLivre = this.VerificarBlocoLivre(requisicao.getRequisicao()); // pega o primeiro bloco livre que caiba na requisição
         if (!blocoLivre) {
@@ -98,11 +98,13 @@ export class MergeFitComponent implements OnInit {
             }
           }
         }
+
         if (blocoLivre) {
           if (blocoLivre.value.getTamanho() > requisicao.getRequisicao()) // verifica se tem que dar split
             this.SplitBloco(blocoLivre.value, requisicao.getRequisicao());
 
           this.MemoryVM.MemoriaOcupada += blocoLivre.value.tamanhoUsado;
+          requisicao.Alocado = true;
         }
 
       } else if (this.hasSpaceForNewBlock(requisicao.getRequisicao())) {
@@ -135,8 +137,10 @@ export class MergeFitComponent implements OnInit {
     while (bloco) {
       //debugger;
 
-      if (bloco.value.NextBloco && bloco.value.NextBloco.tamanhoUsado === 0 && bloco.value.getTamanho() + bloco.value.NextBloco.getTamanho() >= requisicao) {
-        this.MergeBlocos(bloco.value, bloco.value.NextBloco);
+      if (bloco.value.NextBloco && 
+      bloco.value.NextBloco.tamanhoUsado === 0 && 
+      bloco.value.getTamanho() + bloco.value.NextBloco.getTamanho() >= requisicao) {
+        this.MergeBlocos(bloco.value);
         break;
       }
 
@@ -170,8 +174,11 @@ export class MergeFitComponent implements OnInit {
     this.TirarDaLivre(bloco);
   }
 
-  private MergeBlocos(first: BlocoMemoria, second: BlocoMemoria) {
+  private MergeBlocos(first: BlocoMemoria) {
+    let second = first.NextBloco;
     first.NextBloco = second.NextBloco;
+    first.setTamanho(first.getTamanho() + second.getTamanho());
+    this.TirarDaLivre(second)
   }
 
   private TirarDaLivre(bloco: BlocoMemoria) {
