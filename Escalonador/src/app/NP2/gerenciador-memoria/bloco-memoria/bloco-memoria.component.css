@@ -1,8 +1,19 @@
 li{
     display: inline-table;
-    width: 50px;
-    height: 50px;
-    padding: 2px;
+    width: 80px;
+    height: 75px;
+    padding: 5px;
     border: 1px solid rgb(66, 152, 244);
     margin: 3px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px grey;
+}
+li:hover{
+    box-shadow: 0px 0px 7px grey;
+}
+
+li > div{
+    text-align: center;
+    border-top: 1px solid #0773E3;
+    border-bottom: 1px solid #0773E3;
 }

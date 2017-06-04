@@ -19,13 +19,7 @@ export class BestFitComponent implements OnInit, OnDestroy {
   private ProcessKilledSubscriptio: Subscription;
 
   @Output("ViewModelEmitter") ViewModelEmitter = new EventEmitter(); // joga a decisão no gerenciador-memoria.component
-  @Input() MemoryViewModel: MemoryMenuViewModel; // Input só me serve no ngOnInit, depois descartar uso
-
-
-  private MemoriaTotal: number;// Capacidade total da memória
-  private MemoriaOcupada: number = 0; // Soma do valor ocupado dos blocos
-  private MemoriaOcupadaPorBlocos: number = 0;// Soma do tamanho dos blocos criados
-  private NextBlocoId: number = 1; // Contador de ID's
+  @Input() MemoryVM: MemoryMenuViewModel;
 
   TodosOsBlocos: BlocoMemoria;// Raiz da lista encadeada de blocos
   UltimoBloco: BlocoMemoria; // Evitar ficar buscando o último bloco da lista
@@ -37,7 +31,7 @@ export class BestFitComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.MemoriaTotal = this.MemoryViewModel.size;
+    this.MemoryVM.MemoriaTotal = this.MemoryVM.size;
 
     this.AlocarMemoriaSubscription = this.AlocarMemoriaService.handleNewProcess.subscribe(
       (a: AlocarMemoriaViewModel) => this.HandleRequisicao(a)
@@ -83,7 +77,7 @@ export class BestFitComponent implements OnInit, OnDestroy {
           // achado o bloco perfeito setar valores
           let bloco = blocoPerfeito.value;
           bloco.tamanhoUsado = a.getRequisicao();
-          this.MemoriaOcupada += bloco.tamanhoUsado;
+          this.MemoryVM.MemoriaOcupada += bloco.tamanhoUsado;
 
           // Adiciona no processo um novo bloco
           a.ProcessoViewModel.Processo.BlocosMemoria.push(bloco);
@@ -151,21 +145,21 @@ export class BestFitComponent implements OnInit, OnDestroy {
   }
 
   private hasMemory(requisicao) {
-    return this.MemoriaTotal > (this.MemoriaOcupada + requisicao);
+    return this.MemoryVM.MemoriaTotal > (this.MemoryVM.MemoriaOcupada + requisicao);
   }
 
   private hasSpaceForNewBlock(requisicao) {
-    return this.MemoriaTotal > (this.MemoriaOcupadaPorBlocos + requisicao);
+    return this.MemoryVM.MemoriaTotal > (this.MemoryVM.MemoriaOcupadaPorBlocos + requisicao);
   }
 
   private CriarBloco(a: AlocarMemoriaViewModel) {
     let novoBloco = new BlocoMemoria(a.getRequisicao());
-    novoBloco.BID = this.NextBlocoId++;
+    novoBloco.BID = this.MemoryVM.NextBlocoId++;
     novoBloco.NextBloco = null;
     novoBloco.tamanhoUsado = novoBloco.getTamanho();
 
-    this.MemoriaOcupada += novoBloco.getTamanho();
-    this.MemoriaOcupadaPorBlocos += novoBloco.getTamanho();
+    this.MemoryVM.MemoriaOcupada += novoBloco.getTamanho();
+    this.MemoryVM.MemoriaOcupadaPorBlocos += novoBloco.getTamanho();
 
     // Verifica se existe um último bloco (esse pode ser o primeiro)
     if (this.UltimoBloco) {

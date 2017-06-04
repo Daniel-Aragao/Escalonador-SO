@@ -9,6 +9,7 @@ import { ProcessoViewModel } from '../../models/ProcessoViewModel';
 import { ProcessoQueue } from "../../models/ProcessoQueue";
 import { AlocarMemoriaViewModel } from "../../models/AlocarMemoriaViewModel";
 import { MemoryMenuViewModel } from "../../models/MemoryMenuViewModel";
+import { EmptyOfProcessService } from '../../services/empty-of-process.service';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -33,7 +34,8 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
     private CoreSenderService: CoreSenderService,
     private ProcessSenderToCoreService: ProcessSenderToCoreService,
     private AlocarMemoriaService: AlocarMemoriaService,
-    private RespostaMemoriaService: RespostaMemoriaService) {
+    private RespostaMemoriaService: RespostaMemoriaService,
+    private EmptyOfProcessService: EmptyOfProcessService) {
 
     this.processoQueues = [];
     for (var i = 0; i < 4; i++) {
@@ -88,6 +90,7 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
     if (this.IsExistProcess()) {
       processo = this.GetProcessoWithLessPriority();
     }else{
+      this.EmptyOfProcessService.OnEmptyProcess(coreIndex);
       return;
     }
     processo.coreIndex = coreIndex;
@@ -136,6 +139,7 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.processSenderSubscription.unsubscribe();
     this.coreSenderSubscription.unsubscribe();
+    this.memoryResponseSubscription.unsubscribe();
   }
 
 }

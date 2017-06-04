@@ -3,6 +3,8 @@ import { ProcessSenderToCoreService } from '../services/process-sender-core.serv
 import { CoreSenderService } from '../services/core-sender.service';
 import { ProcessSenderService } from '../services/process-sender.service';
 import { KillProcessService } from '../services/kill-process.service';
+import { EmptyOfProcessService } from '../services/empty-of-process.service';
+
 
 import { ProcessoViewModel } from '../models/ProcessoViewModel';
 import { KillProcessViewModel } from '../models/KillProcessViewModel';
@@ -24,6 +26,7 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
   @Input() private showDeadline: boolean;
   private SendToCoreSubscription: Subscription;
   private KillProcessSubscription: Subscription;
+  private EmptyOfProcessSubscription: Subscription;
   private cores: ProcessoViewModel[] = [];
   private pause:boolean = false;
 
@@ -32,8 +35,10 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
   constructor(private ProcessSenderToCoreService: ProcessSenderToCoreService,
     private CoreSenderService: CoreSenderService,
     private ProcessSenderService: ProcessSenderService,
-    private KillProcessService: KillProcessService) {
+    private KillProcessService: KillProcessService,
+    private EmptyOfProcessService: EmptyOfProcessService) {
     this.HandleProcessoEscalonado = this.HandleProcessoEscalonado.bind(this);
+    this.HandleKilledProcess = this.HandleKilledProcess.bind(this);
     this.Loop = this.Loop.bind(this);
   }
 
@@ -48,7 +53,14 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
     this.KillProcessSubscription = this.KillProcessService.handleKilledProcess.subscribe(
       (kp: KillProcessViewModel) => this.HandleKilledProcess(kp));
 
+    this.EmptyOfProcessSubscription = this.EmptyOfProcessService.handleEmptyProcess.subscribe(
+      (index: number) => this.HandleEmptyProcess(index));
+
     this.Loop();
+  }
+
+  private HandleEmptyProcess(index: number) {
+    this.cores[index].isFake = false;    
   }
 
   private HandleProcessoEscalonado(p: ProcessoViewModel) {
@@ -115,6 +127,7 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.SendToCoreSubscription.unsubscribe();
     this.KillProcessSubscription.unsubscribe();
+    this.EmptyOfProcessSubscription.unsubscribe();
     this.cores = [];
   }
 
