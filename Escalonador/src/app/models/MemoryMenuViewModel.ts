@@ -12,4 +12,12 @@ export class MemoryMenuViewModel{
     constructor() {
         this.algoritmo = 1;
     }
+
+    MemoriaAlocadaPercent(){
+        return (100 * (this.MemoriaOcupada/this.MemoriaTotal)).toFixed(2);
+    }
+
+    MemoriaAlocadaBlocoPercent(){
+        return (100 * (this.MemoriaOcupadaPorBlocos/this.MemoriaTotal)).toFixed(2);
+    }
 }

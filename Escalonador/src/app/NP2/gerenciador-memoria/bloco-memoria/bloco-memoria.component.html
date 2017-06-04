@@ -4,7 +4,7 @@
       BID: {{Bloco.BID}}
     </span>
     <div>
-      {{Bloco.tamanhoUsado}}/{{Bloco.getTamanho()}}
+      {{Bloco.tamanhoUsado}} / {{Bloco.getTamanho()}}
     </div>
     <span>
       Ref.:
@@ -19,6 +19,22 @@
   <esc-bloco-memoria [Bloco]="Bloco.NextBloco"></esc-bloco-memoria>
 </span>
 <span *ngIf="BlocosLivres">
-  <li>{{BlocosLivres.value.BID}}</li>
+  <li>
+    <span>
+      BID: {{BlocosLivres.value.BID}}
+    </span>
+    <div>
+      Empty / {{BlocosLivres.value.getTamanho()}}
+    </div>
+    <span>
+      Ref.:
+      <span *ngIf="BlocosLivres.value.NextBloco">
+        {{BlocosLivres.value.NextBloco.BID}}
+      </span>
+      <span *ngIf="!BlocosLivres.value.NextBloco">
+        0
+      </span>
+    </span>
+  </li>
   <esc-bloco-memoria [BlocosLivres]="BlocosLivres.nextNode"></esc-bloco-memoria>
 </span>
