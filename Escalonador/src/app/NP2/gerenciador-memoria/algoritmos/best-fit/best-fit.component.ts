@@ -60,6 +60,7 @@ export class BestFitComponent implements OnInit, OnDestroy {
       blockNode.nextNode = this.BlocosLivres;
       this.BlocosLivres = blockNode;
 
+      this.MemoryVM.MemoriaOcupada -= bloco.tamanhoUsado;
       bloco.tamanhoUsado = 0;
     });
   }

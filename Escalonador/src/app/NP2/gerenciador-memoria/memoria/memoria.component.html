@@ -1,6 +1,6 @@
 <div class="panel panel-warning">
-  
-  <div class="panel-heading">Todos os blocos</div>
+
+  <div class="panel-heading">Todos os blocos | Quantidade Memoria Alocada: {{MemoryVM.MemoriaOcupada}} Bytes({{100*MemoryVM.MemoriaOcupada/MemoryVM.MemoriaTotal}}%) | Quantidade Memoria em Bloco: {{MemoryVM.MemoriaOcupadaPorBlocos}} Bytes({{MemoryVM.MemoriaOcupadaPorBlocos*100/MemoryVM.MemoriaTotal}}%) | Quantidade Memória Total Fisica: {{MemoryVM.MemoriaTotal}}B</div>
   <div class="panel-body">
     <ul>
       <esc-bloco-memoria [Bloco]="TodosOsBlocos"></esc-bloco-memoria>
