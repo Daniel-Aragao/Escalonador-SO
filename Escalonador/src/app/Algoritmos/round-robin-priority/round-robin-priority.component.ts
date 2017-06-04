@@ -87,6 +87,8 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
   private HandleCoreLivre(coreIndex: number): void {
     let processo: ProcessoViewModel = null;
 
+    //debugger;
+
     if (this.IsExistProcess()) {
       processo = this.GetProcessoWithLessPriority();
     }else{
@@ -102,6 +104,8 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
   }
 
   private HandleMemoryResponse(value: AlocarMemoriaViewModel):void{
+    //debugger;
+
     let processo = value.ProcessoViewModel;
     this.ProcessSenderToCoreService.OnNewProcessoEscalonado(processo.Processo, processo.coreIndex, processo.color);
   }

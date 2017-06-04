@@ -23,26 +23,28 @@ export class GerenciadorMemoriaComponent implements OnInit, OnDestroy {
   @Input() MemoryViewModel: MemoryMenuViewModel;
 
   constructor(private RespostaMemoriaService: RespostaMemoriaService,
-              private KillProcessService: KillProcessService) {
-    
-   }
+    private KillProcessService: KillProcessService) {
 
-  ngOnInit() {
-    
   }
 
-  ngOnDestroy(){
+  ngOnInit() {
 
-  }  
+  }
 
-  OnMemoryAlocated(a: AlocarMemoriaViewModel):void{
-    if(a.Alocado){
+  ngOnDestroy() {
+
+  }
+
+  OnMemoryAlocated(a: AlocarMemoriaViewModel): void {
+    //debugger;
+
+    if (a.Alocado) {
       this.RespostaMemoriaService.OnRespostaAlocacaoMemoria(a);
-    }else{
+    } else {
       // matar processo
       this.KillProcessService.OnKillProcess(a.ProcessoViewModel, false, EAutopsia.OutOfMemory, ELocalMorte.GerenciadorMemoria);
     }
   }
-  
+
 
 }

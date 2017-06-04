@@ -9,8 +9,13 @@ export class BlocoMemoria{
         this.tamanhoUsado = 0;
         this.BID = 0;
     }
+    
     public getTamanho(){
         return this.tamanho;
+    }
+
+    public setTamanho(tamanho: number) {
+        this.tamanho = tamanho;
     }
 
     public getPercentOcupado(){
@@ -19,5 +24,13 @@ export class BlocoMemoria{
 
     public getPercentNaoOcupado(){
         return 100 - ((this.tamanhoUsado/this.tamanho) * 100)
+    }
+
+    public Clone(): BlocoMemoria {
+        let bloco = new BlocoMemoria(this.tamanho);
+        bloco.BID = this.BID;
+        bloco.tamanhoUsado = this.tamanhoUsado;
+
+        return bloco;
     }
 }

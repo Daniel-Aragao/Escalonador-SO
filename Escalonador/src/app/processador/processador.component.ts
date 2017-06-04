@@ -106,6 +106,7 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
 
           setTimeout(() => this.CoreSenderService.OnCoreLivre(index), 100);
         }else if(RandomNumber(0, 100) < 25){
+          console.log("deu random!!")
           this.AlocarMemoriaService.OnRequisicaoAlocacaoMemoria(core)
         }
       }

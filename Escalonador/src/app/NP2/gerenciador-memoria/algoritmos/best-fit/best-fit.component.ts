@@ -52,7 +52,6 @@ export class BestFitComponent implements OnInit, OnDestroy {
   }
 
   MoverParaLivre(blocos: BlocoMemoria[]): void {    
-
     blocos.forEach(bloco => {
       let blockNode = new BlockNode();
       blockNode.value = bloco;
@@ -65,45 +64,32 @@ export class BestFitComponent implements OnInit, OnDestroy {
     });
   }
 
-  HandleRequisicao(a: AlocarMemoriaViewModel): void {
-    // código de gerenciar a memória
+  HandleRequisicao(requisicao: AlocarMemoriaViewModel): void {
 
-    // Verificar se tenho memória em bytes
-    if (this.hasMemory(a.getRequisicao())) {
-      // Verificar se tenho blocos livres
+    if (this.hasMemory(requisicao.getRequisicao())) {
       if (this.BlocosLivres) {
-        // Caso tenha blocos livres procuro se encaixo em algum
-        let blocoPerfeito: BlockNode = this.ReceberMelhorEncaixe(this.BlocosLivres, a.getRequisicao());
+        let blocoPerfeito: BlockNode = this.ReceberMelhorEncaixe(this.BlocosLivres, requisicao.getRequisicao());
+
         if (blocoPerfeito) {
-          // achado o bloco perfeito setar valores
           let bloco = blocoPerfeito.value;
-          bloco.tamanhoUsado = a.getRequisicao();
+          bloco.tamanhoUsado = requisicao.getRequisicao();
           this.MemoryVM.MemoriaOcupada += bloco.tamanhoUsado;
 
-          // Adiciona no processo um novo bloco
-          a.ProcessoViewModel.Processo.BlocosMemoria.push(bloco);
-
-          // Confirma a alocação de memória
-          a.Alocado = true;
+          requisicao.ProcessoViewModel.Processo.BlocosMemoria.push(bloco);
+          requisicao.Alocado = true;
         } else {
-          // Caso não caiba em nenhum
-          // Verificar se tenho espaço para criar um bloco do tamanho da requisição
-          if (this.hasSpaceForNewBlock(a.getRequisicao())) {
-            // Caso tenha cria bloco novo
-            this.CriarBloco(a);
+          if (this.hasSpaceForNewBlock(requisicao.getRequisicao())) {
+            this.CriarBloco(requisicao);
           }
         }
       } else {
-        // Caso não tenha blocos livres
-        // verificar se tenho espaço para criar um bloco do tamanho da requisição
-        if (this.hasSpaceForNewBlock(a.getRequisicao())) {
-          // Caso tenha cria bloco novo
-          this.CriarBloco(a);
+        if (this.hasSpaceForNewBlock(requisicao.getRequisicao())) {
+          this.CriarBloco(requisicao);
         }
       }
     }
 
-    this.ViewModelEmitter.emit(a);
+    this.ViewModelEmitter.emit(requisicao);
   }
 
   ReceberMelhorEncaixe(bloco: BlockNode, tamanhoRequisicao: number): BlockNode {
@@ -153,8 +139,8 @@ export class BestFitComponent implements OnInit, OnDestroy {
     return this.MemoryVM.MemoriaTotal > (this.MemoryVM.MemoriaOcupadaPorBlocos + requisicao);
   }
 
-  private CriarBloco(a: AlocarMemoriaViewModel) {
-    let novoBloco = new BlocoMemoria(a.getRequisicao());
+  private CriarBloco(requisicao: AlocarMemoriaViewModel) {
+    let novoBloco = new BlocoMemoria(requisicao.getRequisicao());
     novoBloco.BID = this.MemoryVM.NextBlocoId++;
     novoBloco.NextBloco = null;
     novoBloco.tamanhoUsado = novoBloco.getTamanho();
@@ -162,7 +148,6 @@ export class BestFitComponent implements OnInit, OnDestroy {
     this.MemoryVM.MemoriaOcupada += novoBloco.getTamanho();
     this.MemoryVM.MemoriaOcupadaPorBlocos += novoBloco.getTamanho();
 
-    // Verifica se existe um último bloco (esse pode ser o primeiro)
     if (this.UltimoBloco) {
       this.UltimoBloco.NextBloco = novoBloco;
     } else {
@@ -170,10 +155,8 @@ export class BestFitComponent implements OnInit, OnDestroy {
     }
     this.UltimoBloco = novoBloco;
 
-    // Adiciona no processo um novo bloco
-    a.ProcessoViewModel.Processo.BlocosMemoria.push(novoBloco);
+    requisicao.ProcessoViewModel.Processo.BlocosMemoria.push(novoBloco);
 
-    // Confirma a alocação de memória
-    a.Alocado = true;
+    requisicao.Alocado = true;
   }
 }
