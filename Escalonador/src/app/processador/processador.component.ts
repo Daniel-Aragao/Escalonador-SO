@@ -4,6 +4,8 @@ import { CoreSenderService } from '../services/core-sender.service';
 import { ProcessSenderService } from '../services/process-sender.service';
 import { KillProcessService } from '../services/kill-process.service';
 import { EmptyOfProcessService } from '../services/empty-of-process.service';
+import { AlocarMemoriaService } from "../services/alocar-memoria.service";
+import { RandomNumber } from '../services/RandomNumber';
 
 
 import { ProcessoViewModel } from '../models/ProcessoViewModel';
@@ -36,7 +38,8 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
     private CoreSenderService: CoreSenderService,
     private ProcessSenderService: ProcessSenderService,
     private KillProcessService: KillProcessService,
-    private EmptyOfProcessService: EmptyOfProcessService) {
+    private EmptyOfProcessService: EmptyOfProcessService,
+    private AlocarMemoriaService: AlocarMemoriaService) {
     this.HandleProcessoEscalonado = this.HandleProcessoEscalonado.bind(this);
     this.HandleKilledProcess = this.HandleKilledProcess.bind(this);
     this.Loop = this.Loop.bind(this);
@@ -102,6 +105,8 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
           this.ProcessSenderService.OnNewProcess(core.Processo, core.color);
 
           setTimeout(() => this.CoreSenderService.OnCoreLivre(index), 100);
+        }else if(RandomNumber(0, 100) < 25){
+          this.AlocarMemoriaService.OnRequisicaoAlocacaoMemoria(core)
         }
       }
     });
@@ -133,6 +138,8 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
 
   private HandleKilledProcess(kp : KillProcessViewModel){
     if(!kp.Finished && kp.Autopsia == EAutopsia.OutOfMemory){
+      this.cores[kp.ProcessoViewModel.coreIndex] = new ProcessoViewModel();
+      this.cores[kp.ProcessoViewModel.coreIndex].isFake = true;
       setTimeout(() => this.CoreSenderService.OnCoreLivre(kp.ProcessoViewModel.coreIndex), 100);
     }
   }

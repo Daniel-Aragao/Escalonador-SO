@@ -3,7 +3,7 @@
     <div>
       Quantidade Memoria Alocada: {{MemoryVM.MemoriaOcupada}} Bytes
       <div class="progress">
-        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"  
+        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100"  
         [ngStyle]="{'width': MemoryVM.MemoriaAlocadaPercent()+'%'}">
           {{MemoryVM.MemoriaAlocadaPercent()}}%
         </div>
