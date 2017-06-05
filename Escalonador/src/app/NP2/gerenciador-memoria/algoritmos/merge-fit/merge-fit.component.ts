@@ -201,6 +201,8 @@ export class MergeFitComponent implements OnInit {
 
     // bloco antigo sair da livre  
     this.TirarDaLivre(bloco);
+    this.MergeAll();
+    
   }
 
   private MergeBlocos(first: BlocoMemoria) {
@@ -208,20 +210,20 @@ export class MergeFitComponent implements OnInit {
     first.NextBloco = second.NextBloco;
     first.setTamanho(first.getTamanho() + second.getTamanho());
     this.TirarDaLivre(second)
+    this.MergeAll();
+    
   }
 
   private MergeAll(): void {
     //debugger;
 
     let bloco = this.BlocosLivres;
-    if (bloco) {
-      while (bloco.nextNode) {
-        if (bloco.value.NextBloco && bloco.value.NextBloco.tamanhoUsado === 0)
+      while (bloco) {
+        if (bloco.value.NextBloco && bloco.value.NextBloco.tamanhoUsado == 0)
           this.MergeBlocos(bloco.value);
-        else
-          bloco = bloco.nextNode;
+
+        bloco = bloco.nextNode;
       }
-    }
 
   }
 
