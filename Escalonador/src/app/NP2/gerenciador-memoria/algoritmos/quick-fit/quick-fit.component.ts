@@ -62,8 +62,6 @@ export class QuickFitComponent implements OnInit {
     let MemoryVM = this.MemoryVM;
 
     blocos.forEach(bloco => { // pra cada bloco
-          console.log("aqui")
-      
       let arrayIndex: number = this.getIndexListaLivre(bloco.getTamanho()); // pegar o index da lista correta
 
       let blockNode = new BlockNode();
@@ -81,8 +79,6 @@ export class QuickFitComponent implements OnInit {
     let index = 0;
 
     this.MemoryVM.RequisicoesSelecionadas.forEach(requisicao => {
-          console.log("aqui")
-      
       if (tamanho === requisicao.Requisicao) { 
         index = requisicao.Valor;
       }
@@ -145,11 +141,7 @@ export class QuickFitComponent implements OnInit {
     }else{
       let bloco = lista;
       let blocoPai = null;
-      let i = 0;
       while(bloco){
-          console.log("aqui") // loop infinito
-          if(i++ > 100){debugger;break;}
-        
         if(bloco.value.getTamanho() >= tamanhoRequisicao){
           break;
         }
@@ -174,15 +166,11 @@ export class QuickFitComponent implements OnInit {
   private Recalcular() {
     let blocosLivres = this.BlocosLivres;
     for(let x = 1; x <= this.MemoryVM.qtdLista; x ++){
-      console.log("aqui")
       let element = this.BlocosLivres[x];
       if (element) {
         let bloco = blocosLivres[0];
         let ultimoElement = element;
-        let i = 0;
         while (ultimoElement.nextNode) {
-          console.log("aqui") // loop infinito
-          if(i++ > 100){debugger;break;}
           ultimoElement = ultimoElement.nextNode;
         }
 
@@ -208,8 +196,6 @@ export class QuickFitComponent implements OnInit {
     let RequisicoesSelecionadas = this.MemoryVM.RequisicoesSelecionadas;
 
     this.MemoryVM.RequisicoesCounter.forEach((element, index) => {
-          console.log("aqui")
-      
       if (element && index <= qtd) {
         RequisicoesSelecionadas.push({ Requisicao: element.Requisicao, Valor: index + 1 });
 
@@ -223,10 +209,7 @@ export class QuickFitComponent implements OnInit {
   private genericoToEspecifico(requisicao: number, index: number) {
     let genericoRaiz = this.BlocosLivres[0];
     let paiGRaiz = null;
-    let i= 0;
     while (genericoRaiz) {
-          console.log("aqui")// loop infinito - causa os outros loops - já foi corrigido (solução: novoGenericoRaiz)
-      if(i++ > 100){debugger;break;}
       if (genericoRaiz.value.getTamanho() == requisicao) {
         let novoGenericoRaiz = null;
         if (paiGRaiz) {
@@ -253,8 +236,6 @@ export class QuickFitComponent implements OnInit {
     var any: boolean = false;
 
     this.BlocosLivres.forEach(element => {
-          console.log("aqui")
-      
       if (element) {
         any = true;
       }
@@ -296,8 +277,6 @@ export class QuickFitComponent implements OnInit {
     var incremented = false;
 
     this.MemoryVM.RequisicoesCounter.forEach(element => {
-          console.log("aqui")
-      
       if (element.Requisicao == requisicao) {
         element.Valor++;
         incremented = true;

@@ -45,10 +45,23 @@
     </ul>
   </div>
 </div>
-<div class="panel panel-success" *ngFor="let lista of ListasBlocosLivres">
+<div class="panel panel-success">
+  <div class="panel-heading">
+    Livres genéricos
+  </div>
   <div class="panel-body">
     <ul>
-      <esc-bloco-memoria [BlocosLivres]="lista"></esc-bloco-memoria>
+      <esc-bloco-memoria [BlocosLivres]="ListasBlocosLivres[0]"></esc-bloco-memoria>
+    </ul>
+  </div>
+</div>
+<div class="panel panel-success" *ngFor="let lista of MemoryVM.RequisicoesSelecionadas">
+  <div class="panel-heading">
+    {{lista.Requisicao}}
+  </div>
+  <div class="panel-body">
+    <ul>
+      <esc-bloco-memoria [BlocosLivres]="ListasBlocosLivres[lista.Valor]"></esc-bloco-memoria>
     </ul>
   </div>
 </div>

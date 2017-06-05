@@ -41,7 +41,6 @@ export class GerenciadorMemoriaComponent implements OnInit, OnDestroy {
     if (a.Alocado) {
       this.RespostaMemoriaService.OnRespostaAlocacaoMemoria(a);
     } else {
-      console.log(a.getRequisicao());
       this.KillProcessService.OnKillProcess(a.ProcessoViewModel, false, EAutopsia.OutOfMemory, ELocalMorte.GerenciadorMemoria);
     }
   }
