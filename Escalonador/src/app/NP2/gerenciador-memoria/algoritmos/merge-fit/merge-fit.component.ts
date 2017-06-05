@@ -220,26 +220,7 @@ export class MergeFitComponent implements OnInit {
           bloco = bloco.nextNode;
       }
     }
-/*
-    bloco = this.BlocosLivres;
-    if (bloco) {
-      while (bloco.nextNode) {
-        if (bloco.value.NextBloco && bloco.value.NextBloco.tamanhoUsado === 0)
-          this.MergeBlocos(bloco.value);
-        else
-          bloco = bloco.nextNode;
-      }
-    }
 
-    bloco = this.BlocosLivres;
-    if (bloco) {
-      while (bloco.nextNode) {
-        if (bloco.value.NextBloco && bloco.value.NextBloco.tamanhoUsado === 0)
-          this.MergeBlocos(bloco.value);
-        else
-          bloco = bloco.nextNode;
-      }
-    }*/
   }
 
   private TirarDaLivre(bloco: BlocoMemoria) {
