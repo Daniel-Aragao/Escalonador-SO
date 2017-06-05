@@ -17,7 +17,7 @@ export class Processo {
     constructor() { }
 
     public QuantidadeBytes(){
-        // return RandomNumber(32, 1025);
-        return RandomNumber(32, 36);
+        return RandomNumber(32, 1025);
+        // return RandomNumber(32, 36);
     }
 }

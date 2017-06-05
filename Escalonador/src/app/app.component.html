@@ -10,10 +10,10 @@
   </div>  
   <div class="row">
     <div *ngIf="running">
-      <div class="col-md-5">
+      <div class="col-md-12">
         <esc-processador [showDeadline]='algoritmo==2' [running]='running' [quantidadeCores]="quantidadeCores"></esc-processador>
       </div>
-      <div class="col-md-7">
+      <div class="col-md-12">
         <div [ngSwitch]="algoritmo">
           <div *ngSwitchCase="1">
             <esc-round-robin-priority [algoritmo]="MemoryViewModel" [quantum]="quantum"></esc-round-robin-priority>

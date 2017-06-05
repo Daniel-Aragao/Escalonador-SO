@@ -1,4 +1,4 @@
-li{
+.bloco{
     display: inline-table;
     width: 100px;
     height: 75px;
@@ -8,11 +8,11 @@ li{
     border-radius: 5px;
     box-shadow: 1px 1px 3px grey;
 }
-li:hover{
+.bloco:hover{
     box-shadow: 0px 0px 7px grey;
 }
 
-li > div{
+.bloco > div{
     text-align: center;
     border-top: 1px solid #0773E3;
     border-bottom: 1px solid #0773E3;

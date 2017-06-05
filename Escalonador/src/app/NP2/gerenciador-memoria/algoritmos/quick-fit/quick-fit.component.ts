@@ -165,7 +165,7 @@ export class QuickFitComponent implements OnInit {
 
   private Recalcular() {
     let blocosLivres = this.BlocosLivres;
-    for(let x = 1; x <= this.MemoryVM.qtdLista; x ++){
+    for(let x = 1; x < this.MemoryVM.qtdLista; x ++){
       let element = this.BlocosLivres[x];
       if (element) {
         let bloco = blocosLivres[0];
@@ -196,7 +196,7 @@ export class QuickFitComponent implements OnInit {
     let RequisicoesSelecionadas = this.MemoryVM.RequisicoesSelecionadas;
 
     this.MemoryVM.RequisicoesCounter.forEach((element, index) => {
-      if (element && index <= qtd) {
+      if (element && index < qtd) {
         RequisicoesSelecionadas.push({ Requisicao: element.Requisicao, Valor: index + 1 });
 
         this.genericoToEspecifico(element.Requisicao, index + 1);
