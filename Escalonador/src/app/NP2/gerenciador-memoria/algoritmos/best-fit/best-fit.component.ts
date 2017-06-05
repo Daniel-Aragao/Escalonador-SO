@@ -68,7 +68,7 @@ export class BestFitComponent implements OnInit, OnDestroy {
 
     if (this.hasMemory(requisicao.getRequisicao())) {
       if (this.BlocosLivres) {
-        let blocoPerfeito: BlockNode = this.ReceberMelhorEncaixe(this.BlocosLivres, requisicao.getRequisicao());
+        let blocoPerfeito: BlockNode = this.ReceberMelhorEncaixe(requisicao.getRequisicao());
 
         if (blocoPerfeito) {
           let bloco = blocoPerfeito.value;
@@ -92,9 +92,12 @@ export class BestFitComponent implements OnInit, OnDestroy {
     this.ViewModelEmitter.emit(requisicao);
   }
 
-  ReceberMelhorEncaixe(bloco: BlockNode, tamanhoRequisicao: number): BlockNode {
-    if (bloco.value.getTamanho() === tamanhoRequisicao)
+  ReceberMelhorEncaixe(tamanhoRequisicao: number): BlockNode {
+    let bloco = this.BlocosLivres;
+    if (bloco.value.getTamanho() === tamanhoRequisicao){
+      this.BlocosLivres = bloco.nextNode;
       return bloco;
+    }
 
     let MelhorEncaixe: BlockNode = bloco;
     let AnteriorEncaixe: BlockNode;
