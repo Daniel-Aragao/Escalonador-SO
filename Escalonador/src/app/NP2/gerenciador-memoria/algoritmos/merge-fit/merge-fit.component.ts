@@ -49,7 +49,7 @@ export class MergeFitComponent implements OnInit {
 
   HandleKilledProcess(kp: KillProcessViewModel) {
     this.MoverParaLivre(kp.ProcessoViewModel.Processo.BlocosMemoria);
-    //this.MergeBlocos();
+    this.MergeAll();
   }
 
   MoverParaLivre(blocos: BlocoMemoria[]): void {
@@ -104,6 +104,7 @@ export class MergeFitComponent implements OnInit {
             this.SplitBloco(blocoLivre.value, requisicao.getRequisicao());
 
           this.MemoryVM.MemoriaOcupada += blocoLivre.value.tamanhoUsado;
+          requisicao.ProcessoViewModel.Processo.BlocosMemoria.push(blocoLivre.value);
           requisicao.Alocado = true;
         }
 
@@ -119,16 +120,42 @@ export class MergeFitComponent implements OnInit {
   }
 
   private VerificarBlocoLivre(requisicao: number): BlockNode {
-    let bloco: BlockNode = this.BlocosLivres;
+    let bloco = this.BlocosLivres;
 
-    while (bloco) {
-      if (bloco.value.getTamanho() >= requisicao)
-        break;
+    if (bloco.value.getTamanho() === requisicao)
+      return bloco;
+
+    let MelhorEncaixe: BlockNode = bloco;
+    let AnteriorEncaixe: BlockNode;
+
+    while (bloco.nextNode) {
+      let next = bloco.nextNode;
+
+      if (MelhorEncaixe.value.getTamanho() < requisicao || (MelhorEncaixe.value.getTamanho() > next.value.getTamanho())) {
+        if (next.value.getTamanho() > requisicao) {
+          MelhorEncaixe = next;
+          AnteriorEncaixe = bloco;
+        } else if (next.value.getTamanho() == requisicao) {
+          MelhorEncaixe = next;
+          AnteriorEncaixe = bloco;
+          break;
+        }
+      }
 
       bloco = bloco.nextNode;
     }
 
-    return bloco;
+    if (MelhorEncaixe.value.getTamanho() < requisicao) {
+      return null;
+    }
+/*
+    if (AnteriorEncaixe) {
+      AnteriorEncaixe.nextNode = MelhorEncaixe.nextNode;
+    } else {
+      this.BlocosLivres = MelhorEncaixe.nextNode;
+    }
+*/
+    return MelhorEncaixe;
   }
 
   private BlocoLivreMerged(requisicao: number): BlockNode {
@@ -137,9 +164,9 @@ export class MergeFitComponent implements OnInit {
     while (bloco) {
       //debugger;
 
-      if (bloco.value.NextBloco && 
-      bloco.value.NextBloco.tamanhoUsado === 0 && 
-      bloco.value.getTamanho() + bloco.value.NextBloco.getTamanho() >= requisicao) {
+      if (bloco.value.NextBloco &&
+        bloco.value.NextBloco.tamanhoUsado === 0 &&
+        bloco.value.getTamanho() + bloco.value.NextBloco.getTamanho() >= requisicao) {
         this.MergeBlocos(bloco.value);
         break;
       }
@@ -152,7 +179,6 @@ export class MergeFitComponent implements OnInit {
   }
 
   private SplitBloco(bloco: BlocoMemoria, requisicao: number): void {
-    debugger;
 
     let tamanhoNewBlock: number = bloco.getTamanho() - requisicao;
     let newBlock: BlocoMemoria = new BlocoMemoria(tamanhoNewBlock);
@@ -169,6 +195,7 @@ export class MergeFitComponent implements OnInit {
     newBlock.NextBloco = bloco.NextBloco;
     bloco.NextBloco = newBlock;
     bloco.setTamanho(requisicao);
+    bloco.tamanhoUsado = requisicao;
 
     // bloco antigo sair da livre  
     this.TirarDaLivre(bloco);
@@ -179,6 +206,40 @@ export class MergeFitComponent implements OnInit {
     first.NextBloco = second.NextBloco;
     first.setTamanho(first.getTamanho() + second.getTamanho());
     this.TirarDaLivre(second)
+  }
+
+  private MergeAll(): void {
+    //debugger;
+
+    let bloco = this.BlocosLivres;
+    if (bloco) {
+      while (bloco.nextNode) {
+        if (bloco.value.NextBloco && bloco.value.NextBloco.tamanhoUsado === 0)
+          this.MergeBlocos(bloco.value);
+        else
+          bloco = bloco.nextNode;
+      }
+    }
+/*
+    bloco = this.BlocosLivres;
+    if (bloco) {
+      while (bloco.nextNode) {
+        if (bloco.value.NextBloco && bloco.value.NextBloco.tamanhoUsado === 0)
+          this.MergeBlocos(bloco.value);
+        else
+          bloco = bloco.nextNode;
+      }
+    }
+
+    bloco = this.BlocosLivres;
+    if (bloco) {
+      while (bloco.nextNode) {
+        if (bloco.value.NextBloco && bloco.value.NextBloco.tamanhoUsado === 0)
+          this.MergeBlocos(bloco.value);
+        else
+          bloco = bloco.nextNode;
+      }
+    }*/
   }
 
   private TirarDaLivre(bloco: BlocoMemoria) {
