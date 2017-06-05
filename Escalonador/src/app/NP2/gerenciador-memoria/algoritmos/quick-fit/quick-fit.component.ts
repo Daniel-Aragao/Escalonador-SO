@@ -31,7 +31,7 @@ export class QuickFitComponent implements OnInit {
 
   constructor(private AlocarMemoriaService: AlocarMemoriaService, private KillProcessService: KillProcessService) {
     this.HandleRequisicao = this.HandleRequisicao.bind(this);
-    this.x = this.x.bind(this);
+    this.genericoToEspecifico = this.genericoToEspecifico.bind(this);
     this.BlocosLivres = [];
     this.RequisicoesCounter = [];
     this.RequisicoesSelecionadas = [];
@@ -165,15 +165,32 @@ export class QuickFitComponent implements OnInit {
       if(index < qtd){
         requisicoesSelecionadas.push({Requisicao: element.Requisicao, Valor: index + 1});
 
-        this.x(blocosLivres[0], blocosLivres[index + 1]);
+        this.genericoToEspecifico(element.Requisicao, index+1);
       }
     });
   }
-  //lista livre undefined...
 
-  private x(generico: BlockNode, especifico: BlockNode){
-    //especifico 
+  private genericoToEspecifico(requisicao: number, index: number){
+    let genericoRaiz = this.BlocosLivres[0];
+    let paiGRaiz = null;
+    while(genericoRaiz){
+      if(genericoRaiz.value.getTamanho() == requisicao){
+
+        if(paiGRaiz){
+          paiGRaiz.nextNode = genericoRaiz.nextNode;
+        }else{
+          this.BlocosLivres[0] = genericoRaiz.nextNode;
+        }
+
+        genericoRaiz.nextNode = this.BlocosLivres[index];
+        this.BlocosLivres[index] = genericoRaiz;
+      }
+
+      paiGRaiz = genericoRaiz;
+      genericoRaiz = genericoRaiz.nextNode;
+    }
   }
+
   private HasBlocosLivres(): boolean{
     var any : boolean = false;
 
