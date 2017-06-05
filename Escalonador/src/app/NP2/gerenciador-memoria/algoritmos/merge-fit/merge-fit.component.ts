@@ -121,9 +121,11 @@ export class MergeFitComponent implements OnInit {
 
   private VerificarBlocoLivre(requisicao: number): BlockNode {
     let bloco = this.BlocosLivres;
-
-    if (bloco.value.getTamanho() === requisicao)
+    
+    if (bloco.value.getTamanho() === requisicao) {
+      this.BlocosLivres = bloco.nextNode;
       return bloco;
+    }
 
     let MelhorEncaixe: BlockNode = bloco;
     let AnteriorEncaixe: BlockNode;
@@ -148,13 +150,13 @@ export class MergeFitComponent implements OnInit {
     if (MelhorEncaixe.value.getTamanho() < requisicao) {
       return null;
     }
-/*
-    if (AnteriorEncaixe) {
-      AnteriorEncaixe.nextNode = MelhorEncaixe.nextNode;
-    } else {
-      this.BlocosLivres = MelhorEncaixe.nextNode;
-    }
-*/
+    /*
+        if (AnteriorEncaixe) {
+          AnteriorEncaixe.nextNode = MelhorEncaixe.nextNode;
+        } else {
+          this.BlocosLivres = MelhorEncaixe.nextNode;
+        }
+    */
     return MelhorEncaixe;
   }
 
