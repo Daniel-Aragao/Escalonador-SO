@@ -3,8 +3,7 @@
     <div>
       Quantidade Memoria Alocada: {{MemoryVM.MemoriaOcupada}} Bytes
       <div class="progress">
-        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100"  
-        [ngStyle]="{'width': MemoryVM.MemoriaAlocadaPercent()+'%'}">
+        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': MemoryVM.MemoriaAlocadaPercent()+'%'}">
           {{MemoryVM.MemoriaAlocadaPercent()}}%
         </div>
       </div>
@@ -12,8 +11,7 @@
     <div>
       Quantidade Memoria em Bloco: {{MemoryVM.MemoriaOcupadaPorBlocos}} Bytes
       <div class="progress">
-        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"  
-        [ngStyle]="{'width': MemoryVM.MemoriaAlocadaBlocoPercent()+'%'}">
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': MemoryVM.MemoriaAlocadaBlocoPercent()+'%'}">
           {{MemoryVM.MemoriaAlocadaBlocoPercent()}}%
         </div>
       </div>
@@ -21,8 +19,23 @@
     <div>
       Quantidade Memória Total: {{MemoryVM.MemoriaTotal}} Bytes
     </div>
+
+    <div *ngIf="MemoryVM.algoritmo == 2">
+      <div>
+        Quantidade de listas: {{MemoryVM.qtdLista}}
+      </div>
+      <div>
+        Contador de requisições: {{MemoryVM.qtdRequisicoes}}/{{MemoryVM.intervalo}}
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': MemoryVM.QuantidadeRequisicaoPercent()+'%'}">
+            {{MemoryVM.QuantidadeRequisicaoPercent()}}%
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
-</div> 
+</div>
 
 <div class="panel panel-warning">
   <div class="panel-heading">Todos os blocos</div>
