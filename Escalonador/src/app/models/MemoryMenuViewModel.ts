@@ -3,6 +3,7 @@ export class MemoryMenuViewModel{
     public algoritmo: number;
     public qtdLista: number;
     public intervalo: number;
+    public qtdRequisicoes: number;
 
     public MemoriaTotal: number;// Capacidade total da memória
     public MemoriaOcupada: number = 0; // Soma do valor ocupado dos blocos
