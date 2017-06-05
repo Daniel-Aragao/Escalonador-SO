@@ -3,7 +3,7 @@ export class MemoryMenuViewModel {
     public algoritmo: number;
     public qtdLista: number;
     public intervalo: number;
-    public qtdRequisicoes: number;
+    public qtdRequisicoes: number = 0;
 
     public MemoriaTotal: number;// Capacidade total da memória
     public MemoriaOcupada: number = 0; // Soma do valor ocupado dos blocos
@@ -23,7 +23,7 @@ export class MemoryMenuViewModel {
     }
 
     QuantidadeRequisicaoPercent() {
-        return (100 * (this.intervalo / this.qtdRequisicoes)).toFixed(2);
+        return (100 * (this.qtdRequisicoes / this.intervalo)).toFixed(2);
     }
 
 }

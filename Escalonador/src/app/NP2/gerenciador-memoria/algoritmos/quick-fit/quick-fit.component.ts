@@ -58,17 +58,35 @@ export class QuickFitComponent implements OnInit {
     this.MoverParaLivre(kp.ProcessoViewModel.Processo.BlocosMemoria);
   }
 
-  MoverParaLivre(blocos: BlocoMemoria[]): void {    
-    // blocos.forEach(bloco => {
-    //   let blockNode = new BlockNode();
-    //   blockNode.value = bloco;
+  MoverParaLivre(blocos: BlocoMemoria[]): void {
+    //debugger;
 
-    //   blockNode.nextNode = this.BlocosLivres;
-    //   this.BlocosLivres = blockNode;
+    blocos.forEach(bloco => { // pra cada bloco
+      let arrayIndex: number = this.BlocoPertenceAosSelecionados(bloco); // pegar o index da lista correta
 
-    //   this.MemoryVM.MemoriaOcupada -= bloco.tamanhoUsado;
-    //   bloco.tamanhoUsado = 0;
-    // });
+      let blockNode = new BlockNode();
+      blockNode.value = bloco;
+
+      blockNode.nextNode = this.BlocosLivres[arrayIndex];
+      this.BlocosLivres[arrayIndex] = blockNode;
+
+      this.MemoryVM.MemoriaOcupada -= bloco.tamanhoUsado;
+      bloco.tamanhoUsado = 0;
+    });
+  }
+
+  private BlocoPertenceAosSelecionados(bloco: BlocoMemoria): number {
+    let index = 0;
+
+    this.RequisicoesSelecionadas.forEach(requisicao => {
+      if (bloco.getTamanho() === requisicao.Requisicao) { 
+        index = requisicao.Valor;
+        return requisicao.Valor;
+      }
+    });
+
+    return index;
+
   }
 
   HandleRequisicao(requisicao: AlocarMemoriaViewModel): void {
@@ -97,7 +115,7 @@ export class QuickFitComponent implements OnInit {
 
     this.addRequisicao(requisicao.getRequisicao())
 
-    if(this.MemoryVM.intervalo <= ++this.MemoryVM.qtdRequisicoes){
+    if (this.MemoryVM.intervalo <= ++this.MemoryVM.qtdRequisicoes) {
       this.Recalcular();
       this.MemoryVM.qtdRequisicoes = 0;
       this.RequisicoesCounter = [];
@@ -108,18 +126,19 @@ export class QuickFitComponent implements OnInit {
 
   ReceberEncaixeMaisRapido(tamanhoRequisicao: number): BlockNode {
     let blocosLivres = this.BlocosLivres;
-    let retorno :BlockNode = null;
+    let retorno: BlockNode = null;
+
     this.BlocosLivres.forEach((element, index) => {
-      if(element && element.value.getTamanho() == tamanhoRequisicao && index != 0){
+      if (element && element.value.getTamanho() == tamanhoRequisicao && index != 0) {
         retorno = element;
         blocosLivres[index] = element.nextNode;
       }
     });
-    
-    if(!retorno && this.BlocosLivres[0]){
+
+    if (!retorno && this.BlocosLivres[0]) {
       let bloco = this.BlocosLivres[0];
-      while(bloco){
-        if(bloco.value.getTamanho() >= tamanhoRequisicao){
+      while (bloco) {
+        if (bloco.value.getTamanho() >= tamanhoRequisicao) {
           retorno = bloco;
           this.BlocosLivres[0] = bloco.nextNode;
           break;
@@ -131,27 +150,27 @@ export class QuickFitComponent implements OnInit {
     return retorno;
   }
 
-  private Recalcular(){
+  private Recalcular() {
     let blocosLivres = this.BlocosLivres;
 
     this.BlocosLivres.forEach((element, index) => {
-      if(index != 0 && element){
+      if (index != 0 && element) {
         let bloco = blocosLivres[0];
         let ultimoElement = element;
 
-        while(ultimoElement.nextNode){          
+        while (ultimoElement.nextNode) {
           ultimoElement = ultimoElement.nextNode;
         }
 
         blocosLivres[0] = element;
-        ultimoElement.nextNode = bloco; 
+        ultimoElement.nextNode = bloco;
       }
     });
 
-    this.RequisicoesCounter.sort((a, b): number =>{
-      if(a.Valor < b.Valor){
+    this.RequisicoesCounter.sort((a, b): number => {
+      if (a.Valor < b.Valor) {
         return 1;
-      }else if(a.Valor > b.Valor){
+      } else if (a.Valor > b.Valor) {
         return -1;
       }
       return 0;
@@ -162,23 +181,25 @@ export class QuickFitComponent implements OnInit {
     let requisicoesSelecionadas = this.RequisicoesSelecionadas;
 
     this.RequisicoesCounter.forEach((element, index) => {
-      if(index < qtd){
-        requisicoesSelecionadas.push({Requisicao: element.Requisicao, Valor: index + 1});
+      if (index < qtd) {
+        requisicoesSelecionadas.push({ Requisicao: element.Requisicao, Valor: index + 1 });
 
-        this.genericoToEspecifico(element.Requisicao, index+1);
+        this.genericoToEspecifico(element.Requisicao, index + 1);
       }
     });
   }
 
-  private genericoToEspecifico(requisicao: number, index: number){
+  private genericoToEspecifico(requisicao: number, index: number) {
+    debugger;
+    
     let genericoRaiz = this.BlocosLivres[0];
     let paiGRaiz = null;
-    while(genericoRaiz){
-      if(genericoRaiz.value.getTamanho() == requisicao){
+    while (genericoRaiz) {
+      if (genericoRaiz.value.getTamanho() == requisicao) {
 
-        if(paiGRaiz){
+        if (paiGRaiz) {
           paiGRaiz.nextNode = genericoRaiz.nextNode;
-        }else{
+        } else {
           this.BlocosLivres[0] = genericoRaiz.nextNode;
         }
 
@@ -191,11 +212,11 @@ export class QuickFitComponent implements OnInit {
     }
   }
 
-  private HasBlocosLivres(): boolean{
-    var any : boolean = false;
+  private HasBlocosLivres(): boolean {
+    var any: boolean = false;
 
     this.BlocosLivres.forEach(element => {
-      if(element){
+      if (element) {
         any = true;
       }
     });
@@ -232,11 +253,11 @@ export class QuickFitComponent implements OnInit {
     requisicao.Alocado = true;
   }
 
-  private getListaLivreByRequisicao(requisicao: number){
-    let retorno :BlockNode = this.BlocosLivres[0];
+  private getListaLivreByRequisicao(requisicao: number) {
+    let retorno: BlockNode = this.BlocosLivres[0];
 
     this.BlocosLivres.forEach((element, index) => {
-      if(element && element.value.getTamanho() == requisicao && index != 0){
+      if (element && element.value.getTamanho() == requisicao && index != 0) {
         retorno = element;
       }
     });
@@ -244,24 +265,24 @@ export class QuickFitComponent implements OnInit {
     return retorno;
   }
 
-  private addRequisicao(requisicao: number){
+  private addRequisicao(requisicao: number) {
     var incremented = false;
 
     this.RequisicoesCounter.forEach(element => {
-      if(element.Requisicao == requisicao){
+      if (element.Requisicao == requisicao) {
         element.Valor++;
         incremented = true;
       }
     });
 
-    if(!incremented){
-      this.RequisicoesCounter.push({Requisicao: requisicao, Valor: 1});
+    if (!incremented) {
+      this.RequisicoesCounter.push({ Requisicao: requisicao, Valor: 1 });
     }
   }
 
 }
 
-class RequisicaoCount{
+class RequisicaoCount {
   public Requisicao: number;
   public Valor: number;
 }

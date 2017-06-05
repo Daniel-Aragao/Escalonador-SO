@@ -1,10 +1,9 @@
-
 <div [ngSwitch]="MemoryViewModel.algoritmo">
   <div *ngSwitchCase="1">
     <esc-merge-fit (ViewModelEmitter)="OnMemoryAlocated($event)" [MemoryVM]="MemoryViewModel"></esc-merge-fit>
   </div>
   <div *ngSwitchCase="2">
-    <!--<esc-quick-fit (ViewModelEmitter)="OnMemoryAlocated($event)"></esc-best-fit>-->
+    <esc-quick-fit (ViewModelEmitter)="OnMemoryAlocated($event)" [MemoryVM]="MemoryViewModel"></esc-quick-fit>
   </div>
   <div *ngSwitchCase="3">
     <esc-best-fit (ViewModelEmitter)="OnMemoryAlocated($event)" [MemoryVM]="MemoryViewModel"></esc-best-fit>
