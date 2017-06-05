@@ -239,7 +239,7 @@ export class MergeFitComponent implements OnInit {
         b = b.nextNode;
       }
 
-      if (b.nextNode.nextNode) {
+      if (b.nextNode && b.nextNode.nextNode) {
         b.nextNode = b.nextNode.nextNode;
       }
       else {
