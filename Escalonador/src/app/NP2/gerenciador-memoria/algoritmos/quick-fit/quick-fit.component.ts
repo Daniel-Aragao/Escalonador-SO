@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, EventEmitter, Input, Output } from '@angu
 import { AlocarMemoriaService } from '../../../../services/alocar-memoria.service';
 import { AlocarMemoriaViewModel } from '../../../../models/AlocarMemoriaViewModel';
 import { MemoryMenuViewModel } from '../../../../models/MemoryMenuViewModel';
+import { RequisicaoCount } from '../../../../models/MemoryMenuViewModel';
 import { BlocoMemoria } from '../../../../models/BlocoMemoria';
 import { BlockNode } from '../../../../models/BlockNode';
 import { KillProcessService } from '../../../../services/kill-process.service';
@@ -24,9 +25,6 @@ export class QuickFitComponent implements OnInit {
   private TodosOsBlocos: BlocoMemoria;// Raiz da lista encadeada de blocos
   private UltimoBloco: BlocoMemoria; // Evitar ficar buscando o último bloco da lista
 
-  private RequisicoesCounter: RequisicaoCount[];
-  private RequisicoesSelecionadas: RequisicaoCount[];
-
   private BlocosLivres: BlockNode[]; // Raiz da lista encadeada de nó de bloco(a referência da lista "TodosOsBlocos" não deve ser alterada)
 
   constructor(private AlocarMemoriaService: AlocarMemoriaService, private KillProcessService: KillProcessService) {
@@ -34,8 +32,6 @@ export class QuickFitComponent implements OnInit {
     this.genericoToEspecifico = this.genericoToEspecifico.bind(this);
     this.getIndexListaLivre = this.getIndexListaLivre.bind(this);
     this.BlocosLivres = [];
-    this.RequisicoesCounter = [];
-    this.RequisicoesSelecionadas = [];
   }
 
   ngOnInit() {
@@ -84,7 +80,7 @@ export class QuickFitComponent implements OnInit {
   private getIndexListaLivre(tamanho: number): number {
     let index = 0;
 
-    this.RequisicoesSelecionadas.forEach(requisicao => {
+    this.MemoryVM.RequisicoesSelecionadas.forEach(requisicao => {
           console.log("aqui")
       
       if (tamanho === requisicao.Requisicao) { 
@@ -125,7 +121,7 @@ export class QuickFitComponent implements OnInit {
     if (this.MemoryVM.intervalo <= ++this.MemoryVM.qtdRequisicoes) {
       this.Recalcular();
       this.MemoryVM.qtdRequisicoes = 0;
-      this.RequisicoesCounter = [];
+      this.MemoryVM.RequisicoesCounter = [];
     }
 
     this.ViewModelEmitter.emit(requisicao);
@@ -149,8 +145,10 @@ export class QuickFitComponent implements OnInit {
     }else{
       let bloco = lista;
       let blocoPai = null;
+      let i = 0;
       while(bloco){
           console.log("aqui") // loop infinito
+          if(i++ > 100){debugger;break;}
         
         if(bloco.value.getTamanho() >= tamanhoRequisicao){
           break;
@@ -175,11 +173,10 @@ export class QuickFitComponent implements OnInit {
 
   private Recalcular() {
     let blocosLivres = this.BlocosLivres;
-
-    this.BlocosLivres.forEach((element, index) => {
-          console.log("aqui")
-      
-      if (index != 0 && element) {
+    for(let x = 1; x <= this.MemoryVM.qtdLista; x ++){
+      console.log("aqui")
+      let element = this.BlocosLivres[x];
+      if (element) {
         let bloco = blocosLivres[0];
         let ultimoElement = element;
         let i = 0;
@@ -192,9 +189,12 @@ export class QuickFitComponent implements OnInit {
         blocosLivres[0] = element;
         ultimoElement.nextNode = bloco;
       }
-    });
+      this.BlocosLivres[x] = undefined;
+    }
 
-    this.RequisicoesCounter = this.RequisicoesCounter.sort((a, b): number => {
+
+
+    this.MemoryVM.RequisicoesCounter = this.MemoryVM.RequisicoesCounter.sort((a, b): number => {
       if (a.Valor < b.Valor) {
         return 1;
       } else if (a.Valor > b.Valor) {
@@ -204,20 +204,20 @@ export class QuickFitComponent implements OnInit {
     });
 
     let qtd: number = this.MemoryVM.qtdLista;
-    this.RequisicoesSelecionadas = [];
-    let requisicoesSelecionadas = this.RequisicoesSelecionadas;
+    this.MemoryVM.RequisicoesSelecionadas = [];
+    let RequisicoesSelecionadas = this.MemoryVM.RequisicoesSelecionadas;
 
-    this.RequisicoesCounter.forEach((element, index) => {
+    this.MemoryVM.RequisicoesCounter.forEach((element, index) => {
           console.log("aqui")
       
-      if (element && index < qtd) {
-        requisicoesSelecionadas.push({ Requisicao: element.Requisicao, Valor: index + 1 });
+      if (element && index <= qtd) {
+        RequisicoesSelecionadas.push({ Requisicao: element.Requisicao, Valor: index + 1 });
 
         this.genericoToEspecifico(element.Requisicao, index + 1);
       }
     });
 
-    this.RequisicoesCounter = []
+    this.MemoryVM.RequisicoesCounter = []
   }
   
   private genericoToEspecifico(requisicao: number, index: number) {
@@ -225,7 +225,7 @@ export class QuickFitComponent implements OnInit {
     let paiGRaiz = null;
     let i= 0;
     while (genericoRaiz) {
-          console.log("aqui")// loop infinito - causa os outros loops - já foi corrigido uma das causas (solução: novoGenericoRaiz)
+          console.log("aqui")// loop infinito - causa os outros loops - já foi corrigido (solução: novoGenericoRaiz)
       if(i++ > 100){debugger;break;}
       if (genericoRaiz.value.getTamanho() == requisicao) {
         let novoGenericoRaiz = null;
@@ -295,7 +295,7 @@ export class QuickFitComponent implements OnInit {
   private addRequisicao(requisicao: number) {
     var incremented = false;
 
-    this.RequisicoesCounter.forEach(element => {
+    this.MemoryVM.RequisicoesCounter.forEach(element => {
           console.log("aqui")
       
       if (element.Requisicao == requisicao) {
@@ -305,13 +305,9 @@ export class QuickFitComponent implements OnInit {
     });
 
     if (!incremented) {
-      this.RequisicoesCounter.push({ Requisicao: requisicao, Valor: 1 });
+      this.MemoryVM.RequisicoesCounter.push({ Requisicao: requisicao, Valor: 1 });
     }
   }
 
 }
 
-class RequisicaoCount {
-  public Requisicao: number;
-  public Valor: number;
-}

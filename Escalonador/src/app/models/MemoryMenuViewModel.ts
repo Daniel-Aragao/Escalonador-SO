@@ -10,8 +10,13 @@ export class MemoryMenuViewModel {
     public MemoriaOcupadaPorBlocos: number = 0;// Soma do tamanho dos blocos criados
     public NextBlocoId: number = 1; // Contador de ID's
 
+    public RequisicoesCounter: RequisicaoCount[];
+    public RequisicoesSelecionadas: RequisicaoCount[];
+
     constructor() {
         this.algoritmo = 1;
+        this.RequisicoesCounter = [];
+        this.RequisicoesSelecionadas = [];
     }
 
     MemoriaAlocadaPercent() {
@@ -26,4 +31,9 @@ export class MemoryMenuViewModel {
         return (100 * (this.qtdRequisicoes / this.intervalo)).toFixed(2);
     }
 
+}
+
+export class RequisicaoCount {
+  public Requisicao: number;
+  public Valor: number;
 }
