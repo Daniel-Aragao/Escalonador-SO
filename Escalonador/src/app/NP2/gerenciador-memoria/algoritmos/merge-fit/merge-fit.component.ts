@@ -90,13 +90,13 @@ export class MergeFitComponent implements OnInit {
         blocoLivre = this.VerificarBlocoLivre(requisicao.getRequisicao()); // pega o primeiro bloco livre que caiba na requisição
         if (!blocoLivre) {
           // Não achou procurar algum bloco livre que tenha a possibilidade de fazer merge e que o tamanho total fique >==
-          blocoLivre = this.BlocoLivreMerged(requisicao.getRequisicao()); // pegar o primeiro bloco livre já "mergiado"
+          //blocoLivre = this.BlocoLivreMerged(requisicao.getRequisicao()); // pegar o primeiro bloco livre já "mergiado"
 
-          if (!blocoLivre) {
+          //if (!blocoLivre) {
             if (this.hasSpaceForNewBlock(requisicao.getRequisicao())) {
               this.CriarBloco(requisicao);
             }
-          }
+         // }
         }
 
         if (blocoLivre) {
@@ -201,7 +201,7 @@ export class MergeFitComponent implements OnInit {
 
     // bloco antigo sair da livre  
     this.TirarDaLivre(bloco);
-    this.MergeAll();
+    //this.MergeAll();
     
   }
 
@@ -209,7 +209,9 @@ export class MergeFitComponent implements OnInit {
     let second = first.NextBloco;
     first.NextBloco = second.NextBloco;
     first.setTamanho(first.getTamanho() + second.getTamanho());
+
     this.TirarDaLivre(second)
+    
     this.MergeAll();
     
   }
