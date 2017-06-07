@@ -211,7 +211,7 @@ export class MergeFitComponent implements OnInit {
     first.setTamanho(first.getTamanho() + second.getTamanho());
 
     this.TirarDaLivre(second)
-    
+
     this.MergeAll();
     
   }
@@ -223,8 +223,8 @@ export class MergeFitComponent implements OnInit {
       while (bloco) {
         if (bloco.value.NextBloco && bloco.value.NextBloco.tamanhoUsado == 0)
           this.MergeBlocos(bloco.value);
-
-        bloco = bloco.nextNode;
+        else
+          bloco = bloco.nextNode;
       }
 
   }
@@ -240,8 +240,10 @@ export class MergeFitComponent implements OnInit {
       while (b.nextNode && b.nextNode.value.BID != bloco.BID) {
         b = b.nextNode;
       }
-
-      if (b.nextNode && b.nextNode.nextNode) {
+      if (!b.nextNode) {
+        b = null;
+      }
+      if (b.nextNode.nextNode) {
         b.nextNode = b.nextNode.nextNode;
       }
       else {
