@@ -1,4 +1,5 @@
 import { Processo } from "./Processo";
+import { BlocoMemoria } from "./BlocoMemoria";
 
 export class ProcessoViewModel{
     public Processo: Processo;
@@ -8,8 +9,7 @@ export class ProcessoViewModel{
     // Processo queue deve separar o grupo de processos em vários processos view model
     public GrupoProcessos: Processo[];
     public finished: boolean;
-
-    public isFake: boolean = false;
-
     
+    // NP2
+    public isFake: boolean = false;    
 }

@@ -5,6 +5,8 @@ import { ProcessSenderToCoreService } from "../../services/process-sender-core.s
 import { KillProcessService } from '../../services/kill-process.service';
 import { Processo } from '../../models/Processo';
 import { ProcessoViewModel } from '../../models/ProcessoViewModel';
+import { EAutopsia } from '../../models/EAutopsia';
+import { ELocalMorte } from '../../models/ELocalMorte';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -84,7 +86,7 @@ export class LeastTimeToGoComponent implements OnInit, OnDestroy {
       processo.TDeadline--;
       if (processo.TDeadline <= 0) {
         var deleted = this.processos.splice(i, 1);
-        this.KillProcessService.OnKillProcess(deleted[0], false);
+        this.KillProcessService.OnKillProcess(deleted[0], false, EAutopsia.Timeout, ELocalMorte.Escalonador);
         i--;
       }
     }

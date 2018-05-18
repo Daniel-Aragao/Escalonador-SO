@@ -1,10 +1,15 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ProcessSenderService } from '../../services/process-sender.service';
 import { CoreSenderService } from '../../services/core-sender.service';
-import { ProcessSenderToCoreService } from "../../services/process-sender-core.service"
+import { ProcessSenderToCoreService } from "../../services/process-sender-core.service";
+import { AlocarMemoriaService } from "../../services/alocar-memoria.service";
+import { RespostaMemoriaService } from '../../services/resposta-memoria.service';
 import { Processo } from '../../models/Processo';
 import { ProcessoViewModel } from '../../models/ProcessoViewModel';
 import { ProcessoQueue } from "../../models/ProcessoQueue";
+import { AlocarMemoriaViewModel } from "../../models/AlocarMemoriaViewModel";
+import { MemoryMenuViewModel } from "../../models/MemoryMenuViewModel";
+import { EmptyOfProcessService } from '../../services/empty-of-process.service';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -20,11 +25,17 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
   private processoQueues: ProcessoQueue[];
   private processSenderSubscription: Subscription;
   private coreSenderSubscription: Subscription;
+  private memoryResponseSubscription: Subscription;
   private cursorQueue: number = 0;
+
+  @Input() algoritmo: MemoryMenuViewModel;
 
   constructor(private ProcessSenderService: ProcessSenderService,
     private CoreSenderService: CoreSenderService,
-    private ProcessSenderToCoreService: ProcessSenderToCoreService) {
+    private ProcessSenderToCoreService: ProcessSenderToCoreService,
+    private AlocarMemoriaService: AlocarMemoriaService,
+    private RespostaMemoriaService: RespostaMemoriaService,
+    private EmptyOfProcessService: EmptyOfProcessService) {
 
     this.processoQueues = [];
     for (var i = 0; i < 4; i++) {
@@ -36,7 +47,7 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
     this.addProcessToQueue = this.addProcessToQueue.bind(this);
     this.GetProcessoWithLessPriority = this.GetProcessoWithLessPriority.bind(this);
     this.HandleCoreLivre = this.HandleCoreLivre.bind(this);
-
+    this.HandleMemoryResponse.bind(this);
   }
 
   ngOnInit() {
@@ -45,6 +56,9 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
 
     this.coreSenderSubscription = this.CoreSenderService.handleCoreLivre.subscribe(
       (value: number) => this.HandleCoreLivre(value));
+
+    this.memoryResponseSubscription = this.RespostaMemoriaService.handleNextRaised.subscribe(
+      (value: AlocarMemoriaViewModel) => this.HandleMemoryResponse(value));
   }
 
   private HandleNewProcess(p: ProcessoViewModel) {
@@ -73,13 +87,27 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
   private HandleCoreLivre(coreIndex: number): void {
     let processo: ProcessoViewModel = null;
 
+    //debugger;
+
     if (this.IsExistProcess()) {
       processo = this.GetProcessoWithLessPriority();
     }else{
+      this.EmptyOfProcessService.OnEmptyProcess(coreIndex);
       return;
     }
+    processo.coreIndex = coreIndex;
+    if(!processo.Processo.BlocosMemoria.length){
+      this.AlocarMemoriaService.OnRequisicaoAlocacaoMemoria(processo)
+    }else{
+      this.ProcessSenderToCoreService.OnNewProcessoEscalonado(processo.Processo, processo.coreIndex, processo.color);      
+    }
+  }
 
-    this.ProcessSenderToCoreService.OnNewProcessoEscalonado(processo.Processo, coreIndex, processo.color);
+  private HandleMemoryResponse(value: AlocarMemoriaViewModel):void{
+    //debugger;
+
+    let processo = value.ProcessoViewModel;
+    this.ProcessSenderToCoreService.OnNewProcessoEscalonado(processo.Processo, processo.coreIndex, processo.color);
   }
 
   private IsExistProcess(): boolean {
@@ -115,6 +143,7 @@ export class RoundRobinPriorityComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.processSenderSubscription.unsubscribe();
     this.coreSenderSubscription.unsubscribe();
+    this.memoryResponseSubscription.unsubscribe();
   }
 
 }

@@ -4,3 +4,10 @@
     <esc-processo-queue *ngFor="let processoQueue of processoQueues; let i = index" [cursor]='i == cursorQueue' [showDeadline]=false [processos]="processoQueue.Processos"></esc-processo-queue>
   </div>
 </div>
+
+<div class="panel panel-info">
+  <div class="panel-heading">Gerenciador de memória</div>
+  <div class="panel-body">
+    <esc-gerenciador-memoria [MemoryViewModel]="algoritmo"></esc-gerenciador-memoria>
+  </div>
+</div>

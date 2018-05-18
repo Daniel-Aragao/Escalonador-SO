@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { KillProcessService } from '../services/kill-process.service';
 
 import { ProcessoViewModel } from '../models/ProcessoViewModel';
+import { KillProcessViewModel } from "../models/KillProcessViewModel";
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -22,20 +23,21 @@ export class ConcluidosComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.KillProcessService.handleKilledProcess.subscribe(
-      (p: ProcessoViewModel) => this.HandleKilledProcess(p));
+      (kp: KillProcessViewModel) => this.HandleKilledProcess(kp));
   }
 
-  HandleKilledProcess(p : ProcessoViewModel){
-    if(p.finished){
-      this.Finished.push(p);
+  HandleKilledProcess(kp : KillProcessViewModel){
+    if(kp.Finished){
+      this.Finished.push(kp.ProcessoViewModel);
     }else{
-      this.Unfinished.push(p);
+      this.Unfinished.push(kp.ProcessoViewModel);
     }
   }
 
   ngOnDestroy(){
     this.Finished = [];
     this.Unfinished = [];
+    this.subscription.unsubscribe();
   }
 
 

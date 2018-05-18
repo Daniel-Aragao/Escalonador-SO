@@ -4,18 +4,19 @@
       <esc-menu (AlgoritmoSelecionado)="algoritmo = $event" 
                 (RunningChanged)="running = $event" 
                 (QuantidadeCores)="quantidadeCores = $event"
-                (Quantum)="quantum = $event"></esc-menu>
+                (Quantum)="quantum = $event"
+                (MemoryViewModelEmitter)="MemoryViewModel = $event"></esc-menu>
     </div>
   </div>  
   <div class="row">
     <div *ngIf="running">
-      <div class="col-md-5">
+      <div class="col-md-12">
         <esc-processador [showDeadline]='algoritmo==2' [running]='running' [quantidadeCores]="quantidadeCores"></esc-processador>
       </div>
-      <div class="col-md-7">
+      <div class="col-md-12">
         <div [ngSwitch]="algoritmo">
           <div *ngSwitchCase="1">
-            <esc-round-robin-priority [quantum]="quantum"></esc-round-robin-priority>
+            <esc-round-robin-priority [algoritmo]="MemoryViewModel" [quantum]="quantum"></esc-round-robin-priority>
           </div>
           <div *ngSwitchCase="2">
             <esc-least-time-to-go></esc-least-time-to-go>

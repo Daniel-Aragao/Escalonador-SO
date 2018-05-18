@@ -3,9 +3,16 @@ import { ProcessSenderToCoreService } from '../services/process-sender-core.serv
 import { CoreSenderService } from '../services/core-sender.service';
 import { ProcessSenderService } from '../services/process-sender.service';
 import { KillProcessService } from '../services/kill-process.service';
+import { EmptyOfProcessService } from '../services/empty-of-process.service';
+import { AlocarMemoriaService } from "../services/alocar-memoria.service";
+import { RandomNumber } from '../services/RandomNumber';
+
 
 import { ProcessoViewModel } from '../models/ProcessoViewModel';
+import { KillProcessViewModel } from '../models/KillProcessViewModel';
 import { CoreViewModel } from "../models/CoreViewModel";
+import { EAutopsia } from '../models/EAutopsia';
+import { ELocalMorte } from '../models/ELocalMorte';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -19,7 +26,9 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
   @Input() private running: boolean;
   @Input() private quantidadeCores: number;
   @Input() private showDeadline: boolean;
-  private subscription: Subscription;
+  private SendToCoreSubscription: Subscription;
+  private KillProcessSubscription: Subscription;
+  private EmptyOfProcessSubscription: Subscription;
   private cores: ProcessoViewModel[] = [];
   private pause:boolean = false;
 
@@ -28,8 +37,11 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
   constructor(private ProcessSenderToCoreService: ProcessSenderToCoreService,
     private CoreSenderService: CoreSenderService,
     private ProcessSenderService: ProcessSenderService,
-    private KillProcessService: KillProcessService) {
+    private KillProcessService: KillProcessService,
+    private EmptyOfProcessService: EmptyOfProcessService,
+    private AlocarMemoriaService: AlocarMemoriaService) {
     this.HandleProcessoEscalonado = this.HandleProcessoEscalonado.bind(this);
+    this.HandleKilledProcess = this.HandleKilledProcess.bind(this);
     this.Loop = this.Loop.bind(this);
   }
 
@@ -38,11 +50,20 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
       this.cores[i] = new ProcessoViewModel();
     }
     
-    this.subscription = this.ProcessSenderToCoreService.handleProcessoEscalonado.subscribe(
+    this.SendToCoreSubscription = this.ProcessSenderToCoreService.handleProcessoEscalonado.subscribe(
       (p: ProcessoViewModel) => this.HandleProcessoEscalonado(p));
 
+    this.KillProcessSubscription = this.KillProcessService.handleKilledProcess.subscribe(
+      (kp: KillProcessViewModel) => this.HandleKilledProcess(kp));
+
+    this.EmptyOfProcessSubscription = this.EmptyOfProcessService.handleEmptyProcess.subscribe(
+      (index: number) => this.HandleEmptyProcess(index));
 
     this.Loop();
+  }
+
+  private HandleEmptyProcess(index: number) {
+    this.cores[index].isFake = false;    
   }
 
   private HandleProcessoEscalonado(p: ProcessoViewModel) {
@@ -66,8 +87,8 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
       if (this.IsCoreLivre(core)) {
         this.CoreSenderService.OnCoreLivre(index);
       }
-      else {
-        core.Processo.TRestante--;
+      else if(core.Processo) {
+        core.Processo.TRestante--; // erro undefined Processo causado pela nova regra do "IsCoreLivre"
 
         if (core.Processo.Quantum != undefined)
           core.Processo.Quantum--;
@@ -75,7 +96,7 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
         if (this.IsProcessoOver(core)) {
           this.cores[index] = new ProcessoViewModel();
           this.cores[index].isFake = true;
-          this.KillProcessService.OnKillProcess(core, true);
+          this.KillProcessService.OnKillProcess(core, true, EAutopsia.Done, ELocalMorte.Core);
 
           setTimeout(() => this.CoreSenderService.OnCoreLivre(index), 100);
         } else if (this.IsQuantumOver(core)) {
@@ -84,6 +105,8 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
           this.ProcessSenderService.OnNewProcess(core.Processo, core.color);
 
           setTimeout(() => this.CoreSenderService.OnCoreLivre(index), 100);
+        }else if(RandomNumber(0, 100) < 25){
+          this.AlocarMemoriaService.OnRequisicaoAlocacaoMemoria(core)
         }
       }
     });
@@ -107,8 +130,18 @@ export class ProcessadorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.SendToCoreSubscription.unsubscribe();
+    this.KillProcessSubscription.unsubscribe();
+    this.EmptyOfProcessSubscription.unsubscribe();
     this.cores = [];
+  }
+
+  private HandleKilledProcess(kp : KillProcessViewModel){
+    if(!kp.Finished && kp.Autopsia == EAutopsia.OutOfMemory){
+      this.cores[kp.ProcessoViewModel.coreIndex] = new ProcessoViewModel();
+      this.cores[kp.ProcessoViewModel.coreIndex].isFake = true;
+      setTimeout(() => this.CoreSenderService.OnCoreLivre(kp.ProcessoViewModel.coreIndex), 100);
+    }
   }
 
 }

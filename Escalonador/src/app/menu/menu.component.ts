@@ -21,15 +21,14 @@ export class MenuComponent implements OnInit {
   @Output() QuantidadeCores = new EventEmitter();
   @Output() Quantum = new EventEmitter();
   @Output() RunningChanged = new EventEmitter();
+  @Output() MemoryViewModelEmitter = new EventEmitter();
 
   constructor(private processFactory: ProcessFactoryService, private processSender: ProcessSenderService) {
     this.MenuViewModel = new MenuViewModel();
     this.algoritmo = 1;
-    console.log("ctor")
   }
 
   ngOnInit() {
-    console.log("init")
   }
 
   public onChangeAlgoritmo(valor: number) {
@@ -38,8 +37,8 @@ export class MenuComponent implements OnInit {
   }
 
   public onGetMemoryViewModel(vm : MemoryMenuViewModel){
-    console.log(vm);
     this.MemoryViewModel = vm;
+    this.MemoryViewModelEmitter.emit(vm);
   }
 
   public onClickStart(): void {

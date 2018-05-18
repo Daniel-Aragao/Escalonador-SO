@@ -1,0 +1,67 @@
+<div class="panel panel-primary">
+  <div class="panel-body">
+    <div>
+      Quantidade Memoria Alocada: {{MemoryVM.MemoriaOcupada}} Bytes
+      <div class="progress">
+        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': MemoryVM.MemoriaAlocadaPercent()+'%'}">
+          {{MemoryVM.MemoriaAlocadaPercent()}}%
+        </div>
+      </div>
+    </div>
+    <div>
+      Quantidade Memoria em Bloco: {{MemoryVM.MemoriaOcupadaPorBlocos}} Bytes
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': MemoryVM.MemoriaAlocadaBlocoPercent()+'%'}">
+          {{MemoryVM.MemoriaAlocadaBlocoPercent()}}%
+        </div>
+      </div>
+    </div>
+    <div>
+      Quantidade Memória Total: {{MemoryVM.MemoriaTotal}} Bytes
+    </div>
+
+    <div *ngIf="MemoryVM.algoritmo == 2">
+      <div>
+        Quantidade de listas: {{MemoryVM.qtdLista}}
+      </div>
+      <div>
+        Contador de requisições: {{MemoryVM.qtdRequisicoes}}/{{MemoryVM.intervalo}}
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': MemoryVM.QuantidadeRequisicaoPercent()+'%'}">
+            {{MemoryVM.QuantidadeRequisicaoPercent()}}%
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="panel panel-warning">
+  <div class="panel-heading">Todos os blocos</div>
+  <div class="panel-body">
+    <ul>
+      <esc-bloco-memoria [Bloco]="TodosOsBlocos"></esc-bloco-memoria>
+    </ul>
+  </div>
+</div>
+<div class="panel panel-success">
+  <div class="panel-heading">
+    Livres genéricos
+  </div>
+  <div class="panel-body">
+    <ul>
+      <esc-bloco-memoria [BlocosLivres]="ListasBlocosLivres[0]"></esc-bloco-memoria>
+    </ul>
+  </div>
+</div>
+<div class="panel panel-success" *ngFor="let lista of MemoryVM.RequisicoesSelecionadas">
+  <div class="panel-heading">
+    {{lista.Requisicao}}
+  </div>
+  <div class="panel-body">
+    <ul>
+      <esc-bloco-memoria [BlocosLivres]="ListasBlocosLivres[lista.Valor]"></esc-bloco-memoria>
+    </ul>
+  </div>
+</div>

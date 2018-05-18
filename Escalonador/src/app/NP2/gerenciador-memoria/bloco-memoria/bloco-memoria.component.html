@@ -1,0 +1,40 @@
+<span *ngIf="Bloco">
+  <li class="bloco" [ngStyle]="{'background': 'linear-gradient(to right, #4298f4 ' + Bloco.getPercentOcupado() + '%, #fff '+ 0 + '%)'}">
+    <span>
+      BID: {{Bloco.BID}}
+    </span>
+    <div>
+      {{Bloco.tamanhoUsado}} / {{Bloco.getTamanho()}}
+    </div>
+    <span>
+      Ref.:
+      <span *ngIf="Bloco.NextBloco">
+        {{Bloco.NextBloco.BID}}
+      </span>
+      <span *ngIf="!Bloco.NextBloco">
+        0
+      </span>
+    </span>
+  </li>
+  <esc-bloco-memoria [Bloco]="Bloco.NextBloco"></esc-bloco-memoria>
+</span>
+<span *ngIf="BlocosLivres">
+  <li class="bloco">
+    <span>
+      BID: {{BlocosLivres.value.BID}}
+    </span>
+    <div>
+      Empty / {{BlocosLivres.value.getTamanho()}}
+    </div>
+    <span>
+      Ref.:
+      <span *ngIf="BlocosLivres.value.NextBloco">
+        {{BlocosLivres.value.NextBloco.BID}}
+      </span>
+      <span *ngIf="!BlocosLivres.value.NextBloco">
+        0
+      </span>
+    </span>
+  </li>
+  <esc-bloco-memoria [BlocosLivres]="BlocosLivres.nextNode"></esc-bloco-memoria>
+</span>

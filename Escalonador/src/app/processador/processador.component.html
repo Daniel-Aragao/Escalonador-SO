@@ -1,7 +1,7 @@
 <div class="panel panel-info">
   <div class="panel-heading">Processador</div>
   <div class="text-center">
-    <button class="btn btn-primary margin-top" type="button" (click)='pause = !pause'>Pausar cores</button>
+    <button class="btn btn-primary margin-top" type="button" (click)='pause = !pause'>{{(pause) ? 'Startar' : 'Pausar'}} cores</button>
   </div>
   <div class="panel-body text-center">
     <esc-core *ngFor="let core of cores" [showDeadline]='showDeadline' [core]="core"></esc-core>
